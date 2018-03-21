@@ -225,7 +225,7 @@ function isEmptyObject(obj) {
 
 
 
-http.listen(3000, ()=>{
+http.listen(process.env.PORT || 3000, ()=>{
 
 console.log("Server is listening on port 3000")
 
