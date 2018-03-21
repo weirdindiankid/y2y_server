@@ -31,7 +31,7 @@ var isLoggedIn = false;
 
  const myusername = "angelay@bu.edu.buspark2";
 
- const mypassword = "bigm0ney" //mypassword+token
+ const mypassword = "bigm0neyOIGnrOq2gScZ9jMmUYpAARcf" //mypassword+token
 
 
 
@@ -157,7 +157,7 @@ var auth = async (function(){
 
   const option = {
         method: 'POST',
-        uri: `https://login.salesforce.com/services/oauth2/token`,
+        uri: `https://test.salesforce.com/services/oauth2/token`,
         qs: {
           grant_type: "password",
   				client_id:  clientId,
