@@ -65,7 +65,7 @@ app.post('/login',function(req,res){
 
      // get token and instance_url to talk with salesforce
 
-   auth().then(function(){
+   auth().then(function(){   //asnychorous
 
 
     // get username and password from the users
@@ -77,10 +77,10 @@ app.post('/login',function(req,res){
     console.log(username);
 
     //another request
-
+    //instrad use SoQl to search all contacts and see if any of username__c and password__c matches
     const option = {
             method: 'GET',
-            uri: instance_url+"/services/data/v37.0/parameterizedSearch/?q="+username+"&sobject=Contact&Contact.fields=id,Password__c",
+            uri: instance_url+"/services/data/v20.0/query/?q=SELECT+username__c+,+password__c+,+id+from+Contact+WHERE+username__c='"+username+"'", // SOQL salesforce query for username
             headers: {
               'Authorization': 'Bearer ' + access_token
 
@@ -99,10 +99,12 @@ app.post('/login',function(req,res){
              if (!isEmptyObject(parsedData)) {
                 // user exits
                 // now obtain password for that user (I created field called password for every contact)
-                console.log(parsedData);
-                obtained_password = parsedData['searchRecords'][0]['Password__c'];
+                console.log(parsedData['records'][0]);
+                obtained_password = parsedData['records'][0]['Password__c'];
+                obtained_id = parsedData['records'][0]['Id'];
 
-                id = parsedData['searchRecords'][0]['id'];
+
+
 
 
                  if (obtained_password == password){
@@ -111,7 +113,7 @@ app.post('/login',function(req,res){
                    console.log("you have logged in")
 
                    isLoggedIn = true;
-                   res.send('valid');
+                   res.send(obtained_id);
                  }
 
 
@@ -146,6 +148,58 @@ app.post('/login',function(req,res){
 
 
 });
+
+});
+
+app.post('/edituser',function(req,res){
+
+
+   var rating = req.body.rating;
+   var comment = req.body.comment;
+   var id = req.body.id
+
+
+   console.log(rating);
+
+    auth().then(function(){  // so if token has expires we can have new token else same token would be given
+
+    console.log("we are going to change some user informations here");
+
+
+    const option = {
+            method: 'PATCH',
+            uri: instance_url+'/services/data/v20.0/sobjects/Contact/'+id, // SOQL salesforce query for username
+            headers: {
+              'Authorization': 'Bearer ' + access_token,
+              'Content-Type': 'application/json'
+
+            },
+            body:JSON.stringify({
+              "Daily_Guest_Rating__c" : rating,
+              "Comment_Rating__c": comment
+
+            })
+
+            };
+
+            request(option, function(error, response,body){
+
+
+
+                    if (response.statusCode == 204){  //salesforce doesn't return anything
+                      //no error
+                      res.send("sucess")
+
+
+                    }
+
+                    else {
+                      res.send("error")
+                    }
+
+                  });
+
+    });
 
 });
 
@@ -215,7 +269,14 @@ function isTokenStillValid(access_token){
 }
 
 function isEmptyObject(obj) {
-  return !Object.keys(obj).length;
+
+  if(obj['totalSize'] == 0){    //salesforce has totalSize keyword on its response that says if there is any match with our username query
+
+     return true
+  }
+  else{
+    return false;
+  }
 }
 
 
