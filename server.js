@@ -113,7 +113,7 @@ app.post('/login',function(req,res){
                    console.log("you have logged in")
 
                    isLoggedIn = true;
-                   res.send(obtained_id);
+                   res.send('valid');
                  }
 
 
