@@ -39,27 +39,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 
-// till this
 
-
-
-//io.on('connection',(socket)=>{
-
-  //console.log(`Client ${socket.id} has connected`);
-  //temp_client_id = socket;
-  //auth();
-  //isTokenStillValid(access_token);
-
-
-  //socket.on('disconnect',()=>{
-
-   //console.log("A client has disconnected");
-
-  //});
-
-//});
-
-//first getting the access_token
 
 app.post('/login',function(req,res){
 
@@ -113,23 +93,43 @@ app.post('/login',function(req,res){
                    console.log("you have logged in")
 
                    isLoggedIn = true;
-                   res.send('valid');
+                   //res.send('valid');  // send the json
+
+                   res.send({
+                      "id":obtained_id,
+                      "isValid":"valid"
+
+                   })
+
+
+
                  }
 
 
                  else{
                    //doesn't match password
-                   res.send(
-                  'invalid'
-                  );
+                   //res.send('invalid');
+                   res.send({
+
+                      "isValid":"invalid"
+
+                   })
+
+
               }
 
               }
              else{
               //user doesn't exit as parsed data is empty
-              res.send(
-             'invalid'
-             );
+              //res.send('invalid');
+              res.send({
+
+                 "isValid":"invalid"
+
+              })
+
+
+
             }
 
 
@@ -139,7 +139,13 @@ app.post('/login',function(req,res){
              //salesforce responsed with an error
               console.log(error);
               console.log("Network error");
-              res.send("Network Error")
+              //res.send("Network Error")
+              res.send({
+
+                 "isValid":"invalid"
+
+              })
+
             }
 
 
