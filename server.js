@@ -11,6 +11,10 @@ const request = require('request-promise');
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
 
+var asyncc = require('async');
+
+var _ = require('underscore');
+
 var access_token="random";
 
 var instance_url;
@@ -18,6 +22,8 @@ var instance_url;
 var temp_client_id;
 
 var id;
+
+var bed_id;
 
 var isLoggedIn = false;
 
@@ -41,11 +47,11 @@ app.use(bodyParser.json());
 
 
 
-app.post('/login',function(req,res){
+app.post('/login',function(req,res){    //added name soos********* check
 
      // get token and instance_url to talk with salesforce
 
-   auth().then(function(){   //asnychorous
+   auth("salt").then(function(){   //asnychorous
 
 
     // get username and password from the users
@@ -60,7 +66,7 @@ app.post('/login',function(req,res){
     //instrad use SoQl to search all contacts and see if any of username__c and password__c matches
     const option = {
             method: 'GET',
-            uri: instance_url+"/services/data/v20.0/query/?q=SELECT+username__c+,+password__c+,+id+from+Contact+WHERE+username__c='"+username+"'", // SOQL salesforce query for username
+            uri: instance_url+"/services/data/v20.0/query/?q=SELECT+username__c+,+password__c+,+id+,+Name+from+Contact+WHERE+username__c='"+username+"'", // SOQL salesforce query for username
             headers: {
               'Authorization': 'Bearer ' + access_token
 
@@ -82,6 +88,7 @@ app.post('/login',function(req,res){
                 console.log(parsedData['records'][0]);
                 obtained_password = parsedData['records'][0]['Password__c'];
                 obtained_id = parsedData['records'][0]['Id'];
+                obtained_name = parsedData['records'][0]['Name'];
 
 
 
@@ -97,7 +104,8 @@ app.post('/login',function(req,res){
 
                    res.send({
                       "id":obtained_id,
-                      "isValid":"valid"
+                      "isValid":"valid",
+                      "name" : obtained_name
 
                    })
 
@@ -153,9 +161,9 @@ app.post('/login',function(req,res){
 
 
 
-});
+   });
 
-});
+ });
 
 app.post('/edituser',function(req,res){
 
@@ -164,27 +172,40 @@ app.post('/edituser',function(req,res){
    var comment = req.body.comment;
    var id = req.body.id
 
+   id = id.slice(0,-3)
 
-   console.log(rating);
+   console.log(id);
 
-    auth().then(function(){  // so if token has expires we can have new token else same token would be given
 
-    console.log("we are going to change some user informations here");
+
+
+    auth("salt").then(function(){  // so if token has expires we can have new token else same token would be given
+
+
 
 
     const option = {
-            method: 'PATCH',
-            uri: instance_url+'/services/data/v20.0/sobjects/Contact/'+id, // SOQL salesforce query for username
+            method: 'POST',
+            uri: instance_url+'/services/data/v20.0/sobjects/Survey__C', // SOQL salesforce query for username
             headers: {
               'Authorization': 'Bearer ' + access_token,
               'Content-Type': 'application/json'
 
             },
             body:JSON.stringify({
-              "Daily_Guest_Rating__c" : rating,
-              "Comment_Rating__c": comment
 
-            })
+                      "Name"       : "Android_app_survey",
+                      "CM_First_Name_and_Last_Initial__c"  : "RM",
+                      "RecordType" :{
+
+                      	"Name": "Guest App"
+
+                      },
+                       "Guest__c"   : id,   //from id removing 4 last character
+                       "Comments_on_Daily_Rating__c":comment,
+                       "Daily_Guest_Rating__c":rating
+
+              })
 
             };
 
@@ -192,7 +213,7 @@ app.post('/edituser',function(req,res){
 
 
 
-                    if (response.statusCode == 204){  //salesforce doesn't return anything
+                    if (response.statusCode == 201){  //201 means created
                       //no error
                       res.send("sucess")
 
@@ -209,11 +230,415 @@ app.post('/edituser',function(req,res){
 
 });
 
+app.post('/feedback',function(req,res){
+
+
+
+   var comment = req.body.comment;
+   var id = req.body.id
+
+   id = id.slice(0,-3)
+
+   console.log(id);
 
 
 
 
-var auth = async (function(){
+    auth("salt").then(function(){  // so if token has expires we can have new token else same token would be given
+
+
+
+
+    const option = {
+            method: 'POST',
+            uri: instance_url+'/services/data/v20.0/sobjects/Survey__C', // SOQL salesforce query for username
+            headers: {
+              'Authorization': 'Bearer ' + access_token,
+              'Content-Type': 'application/json'
+
+            },
+            body:JSON.stringify({
+
+                      "Name"       : "Android_app_feedback",
+                      "CM_First_Name_and_Last_Initial__c"  : "RM",
+                      "RecordType" :{
+
+                      	"Name": "Guest App"
+
+                      },
+                       "Guest__c"   : id,   //from id removing 4 last character
+                       "Comments_about_Y2Y__c":comment
+
+
+              })
+
+            };
+
+            request(option, function(error, response,body){
+
+
+
+                    if (response.statusCode == 201){  //201 means created
+                      //no error
+                      res.send("sucess")
+
+
+                    }
+
+                    else {
+                      res.send("error")
+                    }
+
+                  });
+
+    });
+
+});
+
+app.post('/detailuser',function(req,res){
+
+
+
+   var id = req.body.id
+
+
+
+   // get auth then get user's bed id then get bed name + some more details.
+   // 1 st call: need auth to talk with salesforce. salesforce keeps on changing this so to make sure, i have token to do firstcall
+   //2nd call: to get ith bedname have to know ith bed id first.
+   //3: bunch of parallel calls. one of them is to get a bed name
+
+   auth(id).then(getbedid).then(function(bedid){
+
+        //requets and handle for long last day, locker and nits
+
+        const option = {
+              method: 'GET',
+              uri: instance_url+"/services/data/v20.0/sobjects/Contact/"+id,
+              headers: {
+                'Authorization': 'Bearer ' + access_token
+
+              }
+           };
+
+
+
+
+        // bed id
+        const option2 = {
+              method: 'GET',
+              uri: instance_url+"/services/data/v20.0/sobjects/Bed__c/"+bedid,
+              headers: {
+                'Authorization': 'Bearer ' + access_token
+
+              }
+           };
+
+        //we have two independent requests so we are calling two parallel requests
+
+
+        asyncc.parallel({
+               one: function(parallelCallback){
+
+                 const response = (request(option, function(error, response,body){
+
+                     if (!error && response.statusCode == 200){
+                      //no error
+                       var parsedData = JSON.parse(body);
+                       Nit = parsedData["NIT__c"];
+                       Major_warning = parsedData["Major_Warnings__c"];
+                       Minor_warning = parsedData["Minor_Warnings__c"];
+                       Locker = parsedData["Locker_Combination__c"];
+                       Last_Day_Of_Stay = parsedData["Last_Night_Long_Term_Stay__c"];
+
+                       parallelCallback(null,{err: error, res: response, body: body});
+
+
+                        }
+                     else {
+                        console.log("error");
+                      }
+
+                    }));
+
+
+               }, // one
+
+               two: function(parallelCallback){
+
+                 const response = (request(option2, function(error, response,body){
+
+                     if (!error && response.statusCode == 200){
+                      //no error
+                       var parsedData = JSON.parse(body);
+                       bed_name = parsedData["Name"]
+
+                       parallelCallback(null, {err: error, res: response, body: body});
+
+
+                        }
+                     else {
+                        console.log("error");
+                      }
+
+                    }));
+
+
+               }
+
+
+
+
+           }, function(err,results){ // parallel all final callback
+
+
+
+             res.send({
+
+                "Major_warning":Major_warning,
+                "Minor_warning" :Minor_warning,
+                "Locker":Locker,
+                "Last_Day_Of_Stay":Last_Day_Of_Stay,
+                "Bed_name":bed_name,
+                "NIT":Nit
+
+
+
+             })
+
+
+
+
+
+           });
+
+
+
+
+
+   })
+
+
+
+});
+
+app.post('/lottery',function(req,res){
+
+    auth().then(function(){
+
+
+      const option = {
+            method: 'GET',
+            uri: instance_url+"/services/data/v20.0/sobjects/Contact/"+id,
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+
+            }
+         };
+
+
+
+
+      // bed id
+      const option2 = {
+            method: 'GET',
+            uri: instance_url+"/services/data/v20.0/sobjects/Bed__c/"+bedid,
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+
+            }
+         };
+
+      asyncc.parallel({
+             one: function(parallelCallback){
+
+               const response = (request(option, function(error, response,body){
+
+                   if (!error && response.statusCode == 200){
+                    //no error
+                     var parsedData = JSON.parse(body);
+                     //Nit = parsedData["NIT__c"];
+
+
+                     parallelCallback(null,{err: error, res: response, body: body});
+
+
+                      }
+                   else {
+                      console.log("error");
+                    }
+
+                  }));
+
+
+             }, // one
+
+             two: function(parallelCallback){
+
+               const response = (request(option2, function(error, response,body){
+
+                   if (!error && response.statusCode == 200){
+                    //no error
+                     var parsedData = JSON.parse(body);
+                     //bed_name = parsedData["Name"]
+
+                     parallelCallback(null, {err: error, res: response, body: body});
+
+
+                      }
+                   else {
+                      console.log("error");
+                    }
+
+                  }));
+
+
+             }
+
+
+
+
+         },function(err,result1){
+
+
+               // create optiopn 3  and 4
+
+               //result[0] and result1[2] available
+               asyncc.parallel({
+                      one: function(parallelCallback){
+
+                        const response = (request(option, function(error, response,body){
+
+                            if (!error && response.statusCode == 200){
+                             //no error
+                              var parsedData = JSON.parse(body);
+                              Nit = parsedData["NIT__c"];
+                              Major_warning = parsedData["Major_Warnings__c"];
+                              Minor_warning = parsedData["Minor_Warnings__c"];
+                              Locker = parsedData["Locker_Combination__c"];
+                              Last_Day_Of_Stay = parsedData["Last_Night_Long_Term_Stay__c"];
+
+                              parallelCallback(null,{err: error, res: response, body: body});
+
+
+                               }
+                            else {
+                               console.log("error");
+                             }
+
+                           }));
+
+
+                      }, // one
+
+                      two: function(parallelCallback){
+
+                        const response = (request(option2, function(error, response,body){
+
+                            if (!error && response.statusCode == 200){
+                             //no error
+                              var parsedData = JSON.parse(body);
+                              bed_name = parsedData["Name"]
+
+                              parallelCallback(null, {err: error, res: response, body: body});
+
+
+                               }
+                            else {
+                               console.log("error");
+                             }
+
+                           }));
+
+
+                      }
+
+
+
+
+                  },function(err,result2){
+
+
+                        //final
+                        console.log(result)
+
+
+               })
+
+
+
+
+         });
+
+
+    })// auth then close
+
+
+
+
+}); // lottery post
+
+var getbedid = async(function(x){
+
+    //req and res error amd also check if
+
+
+
+
+
+   //DATE()
+
+
+     const option = {
+         method: 'GET',
+         uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Bed__c+,+Guest__c+,+Bed_Assignment_Date__c+,+Long_Term_BA__c+from+Bed_Assignment__c+WHERE+Guest__c='"+x+"'+and+Bed_Assignment_Date__c=2018-03-02",
+         headers: {
+           'Authorization': 'Bearer ' + access_token
+
+         }
+      };
+     try{
+      const response =  await(request(option, function(error, response,body){
+
+       if (!error && response.statusCode == 200){
+        //no error
+         var parsedData = JSON.parse(body);
+
+         bed_id = parsedData["records"][0]["Bed__c"];
+
+
+
+
+          }
+       else {
+
+          console.log(error);
+
+        }
+
+
+      }));
+
+      return Promise.resolve(bed_id);
+
+      }
+      catch(error){
+        console.log("inside catch")
+       console.log(error);
+       Promise.reject(error);
+
+     }
+
+
+
+
+
+
+
+
+});
+
+var auth = async (function(id){
 
   const option = {
         method: 'POST',
@@ -235,8 +660,8 @@ var auth = async (function(){
         var parsedData = JSON.parse(body);
         access_token = parsedData["access_token"];
         instance_url = parsedData["instance_url"]
-        console.log(access_token);
-        console.log(instance_url);
+        //console.log(access_token);
+        //console.log(instance_url);
 
          }
       else {
@@ -245,7 +670,7 @@ var auth = async (function(){
 
 
      }));
-     return Promise.resolve(response.id == 5);
+     return Promise.resolve(id);
 
      }
     catch(error){
