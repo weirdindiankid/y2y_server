@@ -422,7 +422,7 @@ app.post('/detailuser',function(req,res){
 
 });
 
-app.post('/lottery',function(req,res){
+app.get('/lottery',function(req,res){
 
     auth("salt").then(getlotteryid).then(function(lotteryid){
 
