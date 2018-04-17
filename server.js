@@ -424,87 +424,60 @@ app.post('/detailuser',function(req,res){
 
 app.post('/lottery',function(req,res){
 
-    auth().then(function(){
-
-
-      const option = {
-            method: 'GET',
-            uri: instance_url+"/services/data/v20.0/sobjects/Contact/"+id,
-            headers: {
-              'Authorization': 'Bearer ' + access_token
-
-            }
-         };
+    auth("salt").then(getlotteryid).then(function(lotteryid){
 
 
 
 
-      // bed id
-      const option2 = {
-            method: 'GET',
-            uri: instance_url+"/services/data/v20.0/sobjects/Bed__c/"+bedid,
-            headers: {
-              'Authorization': 'Bearer ' + access_token
-
-            }
-         };
-
-      asyncc.parallel({
-             one: function(parallelCallback){
-
-               const response = (request(option, function(error, response,body){
-
-                   if (!error && response.statusCode == 200){
-                    //no error
-                     var parsedData = JSON.parse(body);
-                     //Nit = parsedData["NIT__c"];
 
 
-                     parallelCallback(null,{err: error, res: response, body: body});
-
-
-                      }
-                   else {
-                      console.log("error");
-                    }
-
-                  }));
-
-
-             }, // one
-
-             two: function(parallelCallback){
-
-               const response = (request(option2, function(error, response,body){
-
-                   if (!error && response.statusCode == 200){
-                    //no error
-                     var parsedData = JSON.parse(body);
-                     //bed_name = parsedData["Name"]
-
-                     parallelCallback(null, {err: error, res: response, body: body});
-
-
-                      }
-                   else {
-                      console.log("error");
-                    }
-
-                  }));
-
-
-             }
-
-
-
-
-         },function(err,result1){
 
 
                // create optiopn 3  and 4
 
                //result[0] and result1[2] available
-               asyncc.parallel({
+        if (lotteryid["size"]==2) {
+
+          longtermid = lotteryid["Long Term"].slice(0,-3);
+          ebedid = lotteryid["E-bed"].slice(0,-3);
+
+          console.log(ebedid)
+          console.log(longtermid)
+
+
+          //ebed
+
+          const option = {
+                method: 'GET',
+                uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+id+,+Status__c+,+Lottery_Number_Daily__c+,+Bed_Name__c+from+Lottery_Entry__c+WHERE+Lottery__c='"+ebedid+"'+AND+Bed_Name__c != null",
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+
+                }
+             };
+
+
+
+
+          // long term
+          const option2 = {
+                method: 'GET',
+                uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+id+,+Status__c+,+Lottery_Number_Daily__c+,+Bed_Name__c+from+Lottery_Entry__c+WHERE+Lottery__c='"+longtermid+"'+AND+Bed_Name__c != null",
+                headers: {
+                  'Authorization': 'Bearer ' + access_token
+
+                }
+             };
+
+             var lotterywinner="Not Drawn Yet";
+
+             var lotterywinner2="Not Drawn Yet";
+
+
+
+
+
+          asyncc.parallel({
                       one: function(parallelCallback){
 
                         const response = (request(option, function(error, response,body){
@@ -512,14 +485,27 @@ app.post('/lottery',function(req,res){
                             if (!error && response.statusCode == 200){
                              //no error
                               var parsedData = JSON.parse(body);
-                              Nit = parsedData["NIT__c"];
-                              Major_warning = parsedData["Major_Warnings__c"];
-                              Minor_warning = parsedData["Minor_Warnings__c"];
-                              Locker = parsedData["Locker_Combination__c"];
-                              Last_Day_Of_Stay = parsedData["Last_Night_Long_Term_Stay__c"];
+                              totalSize = parsedData["totalSize"];
+                              var i;
 
-                              parallelCallback(null,{err: error, res: response, body: body});
 
+
+                              if (totalSize!=0){
+
+                              lotterywinner=parsedData["records"][0]["Lottery_Number_Daily__c"];;
+
+                              for (i=1;i<totalSize;i++){
+
+                                    lotterywinner =lotterywinner+"-"+parsedData["records"][i]["Lottery_Number_Daily__c"]
+                                    if(i==totalSize-1){  parallelCallback(null, {err: error, res: lotterywinner});}
+
+                              }
+
+                            }else{
+
+
+                              parallelCallback(null,{err: error, res: "Not Drawn Yet"});
+                            }
 
                                }
                             else {
@@ -538,10 +524,29 @@ app.post('/lottery',function(req,res){
                             if (!error && response.statusCode == 200){
                              //no error
                               var parsedData = JSON.parse(body);
-                              bed_name = parsedData["Name"]
 
-                              parallelCallback(null, {err: error, res: response, body: body});
+                              totalSize = parsedData["totalSize"];
+                              var i;
+                              console.log(totalSize)
 
+                              if (totalSize!=0){
+                                var lotterywinner2=parsedData["records"][0]["Lottery_Number_Daily__c"];
+
+                                for (i=1;i<totalSize;i++){
+
+                                      lotterywinner2 = lotterywinner2+"-"+parsedData["records"][i]["Lottery_Number_Daily__c"]
+                                      console.log(lotterywinner2)
+                                      console.log(i)
+
+                                      if(i==(totalSize-1)){  parallelCallback(null, {err: error, res: lotterywinner2});}
+
+                                }
+
+
+                            }else{
+
+                              parallelCallback(null, {err: error, res: "Not Drawn Yet"});
+                              }
 
                                }
                             else {
@@ -556,27 +561,195 @@ app.post('/lottery',function(req,res){
 
 
 
-                  },function(err,result2){
+          },function(err,result){
+
+
+              (result["two"])
 
 
                         //final
-                        console.log(result)
+                  res.send({
+                    "e-bed":result["one"]["res"],
+                    "Long Term":result["two"]["res"]  //long term
+
+                  })
 
 
-               })
+               })//inner callback
+             }// if loop
+             else{
+                res.send({
+                  "E-bed":"Not Drawn Yet",
+                  "Long Term":"Not Drawn Yet"
 
+                })
 
+             }
 
-
-         });
 
 
     })// auth then close
 
-
-
-
 }); // lottery post
+
+app.get('/test',function(req,res){
+
+
+
+  auth("id").then(action).then(function(action_id){
+   if(action_id["size"]!=0){
+     // when size is not zero
+    console.log(action_id)
+    const option = {
+          method: 'GET',
+          uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+Id+,+Step_Number__c+,Action_Item__c+from+Action_Item_Step__c+WHERE+"+action_id["url"],
+          headers: {
+            'Authorization': 'Bearer ' + access_token
+
+          }
+       };
+
+       const response = (request(option, function(error, response,body){
+
+           if (!error && response.statusCode == 200){
+
+             var parsedData = JSON.parse(body);
+             var totalSize = parsedData["totalSize"]
+
+             console.log(parsedData);
+             var i;
+
+             for (i=0;i<totalSize;i++){
+
+
+               var name = parsedData["records"][i]["Name"]
+               var step = parsedData["records"][i]["Step_Number__c"]
+               var id = parsedData["records"][i]["Id"]
+
+
+               action_id[parsedData["records"][i]["Action_Item__c"]][step]=name
+               action_id[parsedData["records"][i]["Action_Item__c"]]["step_id"]=id
+
+
+               if(i == totalSize-1){res.send(action_id)}
+             }
+
+
+
+
+           }
+           else{
+              console.log("error")
+
+           }
+
+
+
+
+
+
+
+    }))
+  }
+      else {res.send({"size":"0"})} //when there are no task
+
+       })
+
+
+
+})
+
+var getlotteryid = async(function(x){
+
+  //DATE()
+
+  var lottery_id = {}  //lottery object
+
+
+
+  const option = {
+      method: 'GET',
+      uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+id+,+Lottery_Date__c+,+Type__c+from+Lottery__c+WHERE+Lottery_Date__c=2018-02-28+AND+(Type__C='E-Bed'+OR+Type__C='Long Term')",
+      headers: {
+        'Authorization': 'Bearer ' + access_token
+
+      }
+   };
+  try{
+   const response =  await(request(option, function(error, response,body){
+
+    if (!error && response.statusCode == 200){
+     //no error
+      var parsedData = JSON.parse(body);
+
+
+      //bed_id = parsedData["records"][0]["Bed__c"];
+
+
+
+      if (parsedData["totalSize"]==0){
+
+          lottery_id["size"] = 0;
+
+      }else{  //assuming both are dependent with each other
+
+           if (parsedData["records"][0]["Type__c"]=="Long Term"){
+
+
+
+             lottery_id["size"]=2;
+             lottery_id["Long Term"]=parsedData["records"][0]["Id"];
+             lottery_id["E-bed"]=parsedData["records"][1]["Id"];
+
+
+
+
+           }
+           else{
+
+             lottery_id["size"]=2;
+             lottery_id["Long Term"]=parsedData["records"][1]["Id"];
+             lottery_id["E-bed"]=parsedData["records"][0]["Id"];
+
+
+           }
+
+
+
+
+      }
+
+
+
+
+       }
+    else {
+
+       console.log(error);
+
+     }
+
+
+   }));
+
+   return Promise.resolve(lottery_id);
+
+   }
+   catch(error){
+     console.log("inside catch")
+    console.log(error);
+    Promise.reject(error);
+
+  }
+
+
+
+
+
+
+
+
+});
 
 var getbedid = async(function(x){
 
@@ -684,6 +857,118 @@ var auth = async (function(id){
 
 });
 
+var action =  async(function(id){
+
+  //DATE()
+
+  var action_id = {}  //action id and names
+
+
+
+  const option = {
+      method: 'GET',
+      uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+Guest__c+,+Number_of_Steps__c+,+id+,+Status__c+from+Action_Item__c+WHERE+Guest__c='003W000000ngacFIAQ'+AND+Status__c='Planned'",
+      headers: {
+        'Authorization': 'Bearer ' + access_token
+
+      }
+   };
+
+
+  try{
+   const response =  await(request(option, function(error, response,body){
+
+    if (!error && response.statusCode == 200){
+     //no error
+      var parsedData = JSON.parse(body);
+
+
+      //bed_id = parsedData["records"][0]["Bed__c"];
+
+
+
+      if (parsedData["totalSize"]==0){
+
+          action_id["size"] = 0;
+          return Promise.resolve(action_id)
+
+
+      }else{  //assuming both are dependent with each other
+           var totalSize = parsedData["totalSize"]
+           action_id["size"] = totalSize
+           var i;
+           var arr =[]
+           var url = "Action_Item__c="+"'"+parsedData["records"][0]["Id"]+"'"
+           for(i=0;i<totalSize;i++){
+
+             id = parsedData["records"][i]["Id"]
+             numb_of_step = parsedData["records"][i]["Number_of_Steps__c"]
+             name = parsedData["records"][i]["Name"]
+             url = url+"+OR+Action_Item__c="+"'"+parsedData["records"][i]["Id"]+"'"
+
+             action_id[parsedData["records"][i]["Id"]]={"action name":name}
+
+             var obj = {"id":id,
+                        "numb_of_step":numb_of_step,
+                         "name":name}
+
+            arr.push(obj)
+
+            if(i==totalSize-1){
+
+              action_id["records"]=arr
+              action_id["url"] = url
+              //return (action_id)
+            }
+
+
+
+
+           }
+
+
+
+
+    }
+
+
+
+
+      }
+    else {
+
+       console.log(error);
+
+     }
+
+
+   }));
+
+   return Promise.resolve(action_id);
+
+   }
+   catch(error){
+     console.log("inside catch")
+    console.log(error);
+    Promise.reject(error);
+
+  }
+
+
+
+
+
+
+
+
+
+
+});
+
+
+
+
+
 function isTokenStillValid(access_token){
    var temp = access_token;
 
@@ -712,18 +997,8 @@ function isEmptyObject(obj) {
 
 
 
-
-
-
-
-
 http.listen(process.env.PORT || 3000, ()=>{
 
 console.log("Server is listening on port 3000")
 
 });
-
-//io.to(userid).emit('new message', {
-//    message: message,
-//    timestamp: Date.now()
-//  });
