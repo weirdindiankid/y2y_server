@@ -602,7 +602,7 @@ app.get('/actionitems',function(req,res){
     console.log(action_id)
     const option = {
           method: 'GET',
-          uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+Id+,+Step_Number__c+,Action_Item__c+from+Action_Item_Step__c+WHERE+"+action_id["url"],
+          uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+Id+,+Step_Number__c+,Action_Item__c+,+CompletedCB__c+from+Action_Item_Step__c+WHERE+"+action_id["url"],
           headers: {
             'Authorization': 'Bearer ' + access_token
 
@@ -625,10 +625,12 @@ app.get('/actionitems',function(req,res){
                var name = parsedData["records"][i]["Name"]
                var step = parsedData["records"][i]["Step_Number__c"]
                var id = parsedData["records"][i]["Id"]
+               var bool = parsedData["records"][i]["CompletedCB__c"]
 
 
                action_id[parsedData["records"][i]["Action_Item__c"]][step]=name
-               action_id[parsedData["records"][i]["Action_Item__c"]]["step_id"]=id
+               action_id[parsedData["records"][i]["Action_Item__c"]]["step_id"+step]=id
+               action_id[parsedData["records"][i]["Action_Item__c"]]["completed"+step]=bool
 
 
                if(i == totalSize-1){res.send(action_id)}
