@@ -295,11 +295,11 @@ app.post('/feedback',function(req,res){
 
 });
 
-app.post('/detailuser',function(req,res){
+app.post('/detailuser/:id',function(req,res){
 
 
 
-   var id = req.body.id
+   var id = req.params.id
 
 
 
