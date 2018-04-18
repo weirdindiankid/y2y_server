@@ -215,7 +215,7 @@ app.post('/edituser',function(req,res){
 
                     if (response.statusCode == 201){  //201 means created
                       //no error
-                      res.send("sucess")
+                      res.send("success")
 
 
                     }
@@ -592,7 +592,7 @@ app.get('/lottery',function(req,res){
 
 }); // lottery post
 
-app.get('/test',function(req,res){
+app.get('/actionitems',function(req,res){
 
 
 
