@@ -295,7 +295,7 @@ app.post('/feedback',function(req,res){
 
 });
 
-app.post('/detailuser/:id',function(req,res){
+app.get('/detailuser/:id',function(req,res){
 
 
 
