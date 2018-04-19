@@ -661,6 +661,262 @@ app.get('/actionitems',function(req,res){
 
 })
 
+app.post('/actionitems/',function(req,res){
+
+  id = req.body.actionid;
+  comment = req.body.comment;
+  var status = req.body.flag;
+
+  auth(status).then(updateaction).then(async(function(x){
+
+
+
+    const option = {
+        method: 'POST',
+        uri: instance_url+"/services/data/v20.0/sobjects/Action_Item_Update__c/",  //action item
+        headers: {
+          'Authorization': 'Bearer ' + access_token,
+            'Content-Type': 'application/json'
+
+        },
+        body:JSON.stringify({
+
+          "Name": "Android App action update",
+  	       "Action_Item__c" : id,
+  	        "Update__c" : comment
+
+
+          })
+
+        };
+
+    try{
+         const response =  await(request(option, function(error, response,body){
+
+
+
+          if (!error && response.statusCode == 201){
+           //no error
+            var parsedData = JSON.parse(body);
+
+
+            if (parsedData["success"]==true){
+               res.send({"issucess": "Success"})
+
+            }
+
+             }
+
+         }));
+
+
+
+         }
+         catch(error){
+           console.log("inside catch")
+          console.log(error);
+          Promise.reject(error);
+
+        }
+
+
+
+
+
+
+
+  }))
+
+
+
+
+})
+
+app.post('/actionitemstep/',function(req,res){
+
+  var id2 = req.body.actionid;
+  comment = req.body.comment;
+  size = req.body.size
+  var promises =[];
+
+  auth("id").then(function(){
+
+
+
+  for(i=0;i<size;i++){
+
+   promises.push(updateactionstep(req.body.records[i]));
+  }
+  Promise.all(promises).then(async(function(x){
+
+
+   console.log(x)
+
+
+    const option = {
+        method: 'POST',
+        uri: instance_url+"/services/data/v20.0/sobjects/Action_Item_Update__c/",  //action item
+        headers: {
+          'Authorization': 'Bearer ' + access_token,
+            'Content-Type': 'application/json'
+
+        },
+        body:JSON.stringify({
+
+          "Name": "Android App action update",
+  	       "Action_Item__c" : id2,
+  	        "Update__c" : comment
+
+
+          })
+
+        };
+
+    try{
+         const response =  await(request(option, function(error, response,body){
+
+
+
+          if (!error && response.statusCode == 201){
+           //no error
+            var parsedData = JSON.parse(body);
+
+
+            if (parsedData["success"]==true){
+               res.send({"issucess": "Success"})
+
+            }
+
+             }
+
+         }));
+
+
+
+         }
+         catch(error){
+           console.log("inside catch")
+          console.log(error);
+           res.send({"issucess": "Error"});
+
+        }
+
+
+
+
+
+
+
+  }))
+
+
+})
+
+})
+
+var updateactionstep = async(function(x){
+
+  id = x //x has action item step and
+  console.log(x)
+
+  const option = {
+      method: 'PATCH',
+      uri: instance_url+"/services/data/v20.0/sobjects/Action_Item_Step__c/"+id, //step id
+      headers: {
+        'Authorization': 'Bearer ' + access_token,
+          'Content-Type': 'application/json'
+
+      },
+      body:JSON.stringify({
+
+        	"CompletedCB__c":"true"
+
+
+        })
+
+      };
+
+  try{
+       const response =  await(request(option, function(error, response,body){
+
+        if (!error && response.statusCode == 204){
+         //no error
+
+             return Promise.resolve("success");
+
+
+           }
+
+       }));
+
+
+
+       }
+       catch(error){
+         console.log("inside catch")
+        console.log(error);
+        Promise.reject(error);
+
+      }
+
+
+
+
+
+})
+
+var updateaction = async(function(x){
+
+  var status = x;
+
+  const option = {
+      method: 'PATCH',
+      uri: instance_url+"//services/data/v20.0/sobjects/Action_Item__c/"+id,  //action item
+      headers: {
+        'Authorization': 'Bearer ' + access_token,
+          'Content-Type': 'application/json'
+
+      },
+      body:JSON.stringify({
+
+        "Status__c":x   //or dropped
+
+
+        })
+
+      };
+
+  try{
+       const response =  await(request(option, function(error, response,body){
+
+        if (!error && response.statusCode == 204){
+         //no error
+
+             return Promise.resolve("success");
+
+
+           }
+
+       }));
+
+
+
+       }
+       catch(error){
+         console.log("inside catch")
+        console.log(error);
+        Promise.reject(error);
+
+      }
+
+
+
+
+
+})
+
+
+
 var getlotteryid = async(function(x){
 
   //DATE()
