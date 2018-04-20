@@ -927,7 +927,7 @@ var getlotteryid = async(function(x){
 
   const option = {
       method: 'GET',
-      uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+id+,+Lottery_Date__c+,+Type__c+from+Lottery__c+WHERE+Lottery_Date__c=2018-02-28+AND+(Type__C='E-Bed'+OR+Type__C='Long Term')",
+      uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+id+,+Lottery_Date__c+,+Type__c+from+Lottery__c+WHERE+Lottery_Date__c=2018-04-20+AND+(Type__C='E-Bed'+OR+Type__C='Long Term')",
       headers: {
         'Authorization': 'Bearer ' + access_token
 
