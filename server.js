@@ -592,11 +592,14 @@ app.get('/lottery',function(req,res){
 
 }); // lottery post
 
-app.get('/actionitems',function(req,res){
+app.get('/actionitems/:id',function(req,res){
+
+
+  var id = req.params.id
 
 
 
-  auth("id").then(action).then(function(action_id){
+  auth(id).then(action).then(function(action_id){
    if(action_id["size"]!=0){
      // when size is not zero
     console.log(action_id)
@@ -1118,14 +1121,14 @@ var auth = async (function(id){
 var action =  async(function(id){
 
   //DATE()
-
+  var id = id;
   var action_id = {}  //action id and names
 
 
 
   const option = {
       method: 'GET',
-      uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+Guest__c+,+Number_of_Steps__c+,+id+,+Status__c+from+Action_Item__c+WHERE+Guest__c='003W000000ngacFIAQ'+AND+Status__c='Planned'",
+      uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+Guest__c+,+Number_of_Steps__c+,+id+,+Status__c+from+Action_Item__c+WHERE+Guest__c='"+id+"'+AND+Status__c='Planned'",
       headers: {
         'Authorization': 'Bearer ' + access_token
 
