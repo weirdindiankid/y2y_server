@@ -336,7 +336,7 @@ app.get('/detailuser/:id',function(req,res){
 
         //we have two independent requests so we are calling two parallel requests
 
-
+        if (bedid != 0){
         asyncc.parallel({
                one: function(parallelCallback){
 
@@ -350,6 +350,9 @@ app.get('/detailuser/:id',function(req,res){
                        Minor_warning = parsedData["Minor_Warnings__c"];
                        Locker = parsedData["Locker_Combination__c"];
                        Last_Day_Of_Stay = parsedData["Last_Night_Long_Term_Stay__c"];
+
+                       if (Locker == null){ Locker="Not Assigned"};
+                       if (Last_Day_Of_Stay==null){Last_Day_Of_Stay = "N/A"}
 
                        parallelCallback(null,{err: error, res: response, body: body});
 
@@ -393,6 +396,8 @@ app.get('/detailuser/:id',function(req,res){
 
 
 
+
+
              res.send({
 
                 "Major_warning":Major_warning,
@@ -411,6 +416,52 @@ app.get('/detailuser/:id',function(req,res){
 
 
            });
+
+         } //
+         else {
+
+
+           request(option, function(error, response,body){
+
+               if (!error && response.statusCode == 200){
+                //no error
+                 var parsedData = JSON.parse(body);
+                 Nit = parsedData["NIT__c"];
+                 Major_warning = parsedData["Major_Warnings__c"];
+                 Minor_warning = parsedData["Minor_Warnings__c"];
+                 Locker = parsedData["Locker_Combination__c"];
+                 Last_Day_Of_Stay = parsedData["Last_Night_Long_Term_Stay__c"];
+
+                 if (Locker == null){ Locker="Not Assigned"};
+                 if (Last_Day_Of_Stay==null){Last_Day_Of_Stay = "N/A"}
+
+                 res.send({
+
+                    "Major_warning":Major_warning,
+                    "Minor_warning" :Minor_warning,
+                    "Locker":Locker,
+                    "Last_Day_Of_Stay":Last_Day_Of_Stay,
+                    "Bed_name":"Not Assigned",
+                    "NIT":Nit
+
+
+
+                 })
+
+
+
+
+                  }
+               else {
+                  console.log("error");
+                }
+
+              });
+
+
+
+
+         }
 
 
 
@@ -1016,6 +1067,25 @@ var getbedid = async(function(x){
 
     //req and res error amd also check if
 
+    var d = new Date();
+
+    var year = d.getFullYear();
+    var month = (d.getMonth()+1)%12;
+    var dt = d.getDate();
+
+    if (dt < 10) {
+      dt = '0' + dt;
+    }
+    if (month < 10) {
+      month = '0' + month;
+    }
+
+
+
+    var date = year+"-"+month+"-"+dt
+
+    console.log(date)
+
 
 
 
@@ -1025,7 +1095,7 @@ var getbedid = async(function(x){
 
      const option = {
          method: 'GET',
-         uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Bed__c+,+Guest__c+,+Bed_Assignment_Date__c+,+Long_Term_BA__c+from+Bed_Assignment__c+WHERE+Guest__c='"+x+"'+and+Bed_Assignment_Date__c=2018-03-02",
+         uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Bed__c+,+Guest__c+,+Bed_Assignment_Date__c+,+Long_Term_BA__c+from+Bed_Assignment__c+WHERE+Guest__c='"+x+"'+and+Bed_Assignment_Date__c="+date,
          headers: {
            'Authorization': 'Bearer ' + access_token
 
@@ -1035,10 +1105,22 @@ var getbedid = async(function(x){
       const response =  await(request(option, function(error, response,body){
 
        if (!error && response.statusCode == 200){
+
+
         //no error
          var parsedData = JSON.parse(body);
 
+         if (parsedData["totalSize"] != 0){
+
          bed_id = parsedData["records"][0]["Bed__c"];
+
+       }
+        else {
+
+          console.log("no bed")
+
+          bed_id = 0
+        }
 
 
 
