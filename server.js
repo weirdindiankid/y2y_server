@@ -487,13 +487,13 @@ app.get('/lottery',function(req,res){
                // create optiopn 3  and 4
 
                //result[0] and result1[2] available
-        if (lotteryid["size"]==2) {
+      if (lotteryid["size"]==2) {
 
           longtermid = lotteryid["Long Term"].slice(0,-3);
           ebedid = lotteryid["E-bed"].slice(0,-3);
 
-          console.log(ebedid)
-          console.log(longtermid)
+          console.log(ebedid+"ebedlot")
+          console.log(longtermid+"lonter")
 
 
           //ebed
@@ -520,9 +520,9 @@ app.get('/lottery',function(req,res){
                 }
              };
 
-             var lotterywinner="Not Drawn Yet";
+             var lotterywinner="N/A";
 
-             var lotterywinner2="Not Drawn Yet";
+             var lotterywinner2="N/A";
 
 
 
@@ -539,11 +539,15 @@ app.get('/lottery',function(req,res){
                               totalSize = parsedData["totalSize"];
                               var i;
 
+                              if(totalSize ==1){
+                                 lotterywinner=parsedData["records"][0]["Lottery_Number_Daily__c"];
+                                 parallelCallback(null,{err: error, res: lotterywinner});
 
+                              }
 
-                              if (totalSize!=0){
+                              else if (totalSize!=0){
 
-                              lotterywinner=parsedData["records"][0]["Lottery_Number_Daily__c"];;
+                              lotterywinner=parsedData["records"][0]["Lottery_Number_Daily__c"];
 
                               for (i=1;i<totalSize;i++){
 
@@ -552,13 +556,18 @@ app.get('/lottery',function(req,res){
 
                               }
 
-                            }else{
-
-
-                              parallelCallback(null,{err: error, res: "Not Drawn Yet"});
                             }
 
-                               }
+
+                            else{
+
+
+                              parallelCallback(null,{err: error, res: "N/A"});
+                            }
+
+
+
+                          } // iferror
                             else {
                                console.log("error");
                              }
@@ -580,7 +589,14 @@ app.get('/lottery',function(req,res){
                               var i;
                               console.log(totalSize)
 
-                              if (totalSize!=0){
+
+                              if(totalSize ==1){
+                                 lotterywinner2=parsedData["records"][0]["Lottery_Number_Daily__c"];
+                                 parallelCallback(null,{err: error, res: lotterywinner2});
+
+                              }
+
+                              else if (totalSize!=0){
                                 var lotterywinner2=parsedData["records"][0]["Lottery_Number_Daily__c"];
 
                                 for (i=1;i<totalSize;i++){
@@ -596,7 +612,7 @@ app.get('/lottery',function(req,res){
 
                             }else{
 
-                              parallelCallback(null, {err: error, res: "Not Drawn Yet"});
+                              parallelCallback(null, {err: error, res: "N/A"});
                               }
 
                                }
@@ -615,7 +631,7 @@ app.get('/lottery',function(req,res){
           },function(err,result){
 
 
-              (result["two"])
+              console.log(result["two"])
 
 
                         //final
@@ -630,8 +646,8 @@ app.get('/lottery',function(req,res){
              }// if loop
              else{
                 res.send({
-                  "E-bed":"Not Drawn Yet",
-                  "Long Term":"Not Drawn Yet"
+                  "E-bed":"N/A",
+                  "Long Term":"N/A"
 
                 })
 
@@ -1070,7 +1086,7 @@ var getbedid = async(function(x){
     var d = new Date();
 
     var year = d.getFullYear();
-    var month = (d.getMonth()+1)%12;
+    var month = (d.getMonth()+1);
     var dt = d.getDate();
 
     if (dt < 10) {
