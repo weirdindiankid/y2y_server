@@ -737,6 +737,11 @@ app.post('/actionitems/',function(req,res){
   comment = req.body.comment;
   var status = req.body.flag;
 
+
+  console.log(id);
+  console.log(comment)
+  console.log(status)
+
   auth(status).then(updateaction).then(async(function(x){
 
 
@@ -991,7 +996,7 @@ var getlotteryid = async(function(x){
 
   //DATE()
 
-  var lottery_id = {}  //lottery object
+ var lottery_id = {}  //lottery object
 
 
 
