@@ -63,7 +63,7 @@ app.post('/login',function(req,res){    //added name soos********* check
     console.log(username);
 
     //another request
-    //instrad use SoQl to search all contacts and see if any of username__c and password__c matches
+    //use SoQl to search all contacts and see if any of username__c and password__c matches
     const option = {
             method: 'GET',
             uri: instance_url+"/services/data/v20.0/query/?q=SELECT+username__c+,+password__c+,+id+,+Name+from+Contact+WHERE+username__c='"+username+"'", // SOQL salesforce query for username
@@ -186,7 +186,7 @@ app.post('/edituser',function(req,res){
 
     const option = {
             method: 'POST',
-            uri: instance_url+'/services/data/v20.0/sobjects/Survey__C', // SOQL salesforce query for username
+            uri: instance_url+'/services/data/v20.0/sobjects/Survey__C', //creating new survey object
             headers: {
               'Authorization': 'Bearer ' + access_token,
               'Content-Type': 'application/json'
@@ -994,15 +994,32 @@ var updateaction = async(function(x){
 
 var getlotteryid = async(function(x){
 
-  //DATE()
+    //DATE()
 
- var lottery_id = {}  //lottery object
+   var lottery_id = {}  //lottery object
+
+   var d = new Date();
+
+   var year = d.getFullYear();
+   var month = (d.getMonth()+1);
+   var dt = d.getDate();
+
+   if (dt < 10) {
+     dt = '0' + dt;
+   }
+   if (month < 10) {
+     month = '0' + month;
+   }
+
+
+
+   var date = year+"-"+month+"-"+dt
 
 
 
   const option = {
       method: 'GET',
-      uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+id+,+Lottery_Date__c+,+Type__c+from+Lottery__c+WHERE+Lottery_Date__c=2018-04-20+AND+(Type__C='E-Bed'+OR+Type__C='Long Term')",
+      uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+id+,+Lottery_Date__c+,+Type__c+from+Lottery__c+WHERE+Lottery_Date__c="+date+"+AND+(Type__C='E-Bed'+OR+Type__C='Long Term')",
       headers: {
         'Authorization': 'Bearer ' + access_token
 
