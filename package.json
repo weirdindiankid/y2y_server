@@ -10,9 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.6.0",
+    "async-waterfall": "^0.1.5",
     "asyncawait": "^1.0.6",
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
+    "jsonwebtoken": "^8.2.1",
     "request": "^2.85.0",
     "request-promise": "^4.2.2",
     "socket.io": "^2.0.4",
