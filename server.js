@@ -33,9 +33,9 @@ var actionRouter = require("./Routes/actionitem");
 
 var access_token="random";
 
-var authjson = require('./auth/auth');
+var authjson = process.env || require('./auth/auth');
 
-var jwtsecret = authjson.jwtsecret || process.env.jwtsecret;
+var jwtsecret = authjson.jwtsecret;
 
 var instance_url;
 

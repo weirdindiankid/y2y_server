@@ -2,9 +2,9 @@
 // to verify the jwt
 
 const jwt = require('jsonwebtoken');
-var authjson = require('../auth/auth');
+var authjson = process.env || require('../auth/auth') ;
 
-var jwtsecret = authjson.jwtsecret || process.env.jwtsecret;
+var jwtsecret = authjson.jwtsecret ;
 
 module.exports = function(req,res,next){
 

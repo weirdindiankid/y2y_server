@@ -1,7 +1,7 @@
 //salesforce doesn't have continous connection system. Hence need to do rest call everytime
 
 var async = require('asyncawait/async');
-var authjson = require('../auth/auth')
+var authjson = process.env || require('../auth/auth')
 var await = require('asyncawait/await');
 const request = require('request-promise');
 
@@ -18,10 +18,10 @@ var auth = async (function(id){
         uri: `https://test.salesforce.com/services/oauth2/token`,
         qs: {
           grant_type: "password",
-  				client_id:  authjson.clientId || process.env.clientId,
-  				client_secret: authjson.clientSecret || process.env.clientSecret,
-  				username: authjson.myusername || process.env.myusername,
-          password: authjson.mypassword ||  process.env.mypassword
+  				client_id:  authjson.clientId ,
+  				client_secret: authjson.clientSecret ,
+  				username: authjson.myusername ,
+          password: authjson.mypassword
 
         }
      };
