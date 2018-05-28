@@ -33,6 +33,8 @@ var actionRouter = require("./Routes/actionitem");
 
 var access_token="random";
 
+var authjson = require('./auth/auth');
+
 var jwtsecret = authjson.jwtsecret || process.env.jwtsecret;
 
 var instance_url;
