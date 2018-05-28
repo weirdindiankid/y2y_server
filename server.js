@@ -33,6 +33,8 @@ var actionRouter = require("./Routes/actionitem");
 
 var access_token="random";
 
+var jwtsecret = authjson.jwtsecret || process.env.jwtsecret;
+
 var instance_url;
 
 var temp_client_id;
@@ -119,7 +121,7 @@ app.post('/login',function(req,res){    //added name soos********* check
                      "name" : obtained_name
                    }
 
-                   jwt.sign({user},'This1smysecretk3y', (err,token) => {
+                   jwt.sign({user},jwtsecret, (err,token) => {
 
                       res.json({token: token,
                             "isValid":"valid",

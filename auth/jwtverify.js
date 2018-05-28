@@ -4,7 +4,7 @@
 const jwt = require('jsonwebtoken');
 var authjson = require('../auth/auth');
 
-var jwtsecret = authjson.jwtsecret;
+var jwtsecret = authjson.jwtsecret || process.env.jwtsecret;
 
 module.exports = function(req,res,next){
 
