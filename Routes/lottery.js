@@ -96,7 +96,7 @@ router.get('/lottery',function(req,res){
 
                               for (i=1;i<totalSize;i++){
 
-                                    lotterywinner =lotterywinner+"-"+parsedData["records"][i]["Lottery_Number_Daily__c"]
+                                    lotterywinner =lotterywinner+","+parsedData["records"][i]["Lottery_Number_Daily__c"]
                                     if(i==totalSize-1){  parallelCallback(null, {err: error, res: lotterywinner});}
 
                               }
@@ -146,7 +146,7 @@ router.get('/lottery',function(req,res){
 
                                 for (i=1;i<totalSize;i++){
 
-                                      lotterywinner2 = lotterywinner2+"-"+parsedData["records"][i]["Lottery_Number_Daily__c"]
+                                      lotterywinner2 = lotterywinner2+","+parsedData["records"][i]["Lottery_Number_Daily__c"]
                                       console.log(lotterywinner2)
                                       console.log(i)
 
