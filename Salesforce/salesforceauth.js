@@ -1,7 +1,8 @@
 //salesforce doesn't have continous connection system. Hence need to do rest call everytime
 
 var async = require('asyncawait/async');
-var authjson = require('../auth/auth') || null;
+//var authjson = require('../auth/auth') || null;
+var authjson = null // for github
 var await = require('asyncawait/await');
 const request = require('request-promise');
 
