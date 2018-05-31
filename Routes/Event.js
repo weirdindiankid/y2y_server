@@ -95,11 +95,16 @@ router.get('/events',function(req,res,next){
                           var description = records[i]["Description"]
 
                           //assuming description will always have the json
+
+
                           var descriptionjson = JSON.parse(description)
+
 
                           var users = descriptionjson["Users"]
 
                           emptyjobject["Description"] = descriptionjson["Description"]
+
+
 
                           //check if user array obtained is empty or undefined
                           if (users === undefined || users.length == 0) {

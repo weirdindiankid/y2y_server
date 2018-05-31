@@ -2,9 +2,9 @@
 // to verify the jwt
 
 const jwt = require('jsonwebtoken');
-var authjson = process.env || require('../auth/auth') ;
+var authjson =  require('../auth/auth') ;
 
-var jwtsecret = authjson.jwtsecret ;
+var jwtsecret = process.env.jwtsecret || authjson.jwtsecret ;
 
 module.exports = function(req,res,next){
 
@@ -22,7 +22,7 @@ if(typeof(bearerHeader) != 'undefined' && bearerHeader){
   jwt.verify(token,jwtsecret,(err,data)=>{
 
       if(err){
-
+        console.log(err)
         res.sendStatus(403)
       }
       else{

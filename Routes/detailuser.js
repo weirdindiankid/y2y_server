@@ -1,16 +1,20 @@
 const express = require('express');
-
+var asyncc = require('async');
 const router = express.Router();
 const bodyParser = require('body-parser');
 var Salesforceauth = require("../Salesforce/salesforceauth");
 const request = require('request-promise');
 var BedIdHelperFunctions =  require("../HelperFunctions/GetBedId");
 
+var eventHelperFunctions =  require("../HelperFunctions/EventHelpers"); //borrowing a helper
+var changeDateFormat = eventHelperFunctions["helperOne"]; // borrowing this helper function from event
+
 var getbedid = BedIdHelperFunctions["helperOne"];
 
 var access_token;
 var instance_url;
-var responsejson = {};   //{size:  ,records:[{"name": ,"startTime": ,"endTime": , "date"}] }
+var emptyjsonobject = {};   //{size:  ,records:[{"name": ,"startTime": ,"endTime": , "date"}] }
+
 
 //using body parser middleware to make reading http body simple
 router.use(bodyParser.urlencoded({extended: false}));
@@ -36,7 +40,7 @@ router.get('/detailuser/',function(req,res){
 
         //requets and handle for long last day, locker and nits
 
-
+        var consequence=[];
 
 
          var bedid = tokens[0]
@@ -66,9 +70,22 @@ router.get('/detailuser/',function(req,res){
               }
            };
 
+
+          const option3 = {
+
+            method: 'GET',
+            uri: instance_url+"/services/data/v20.0/query/?q=SELECT+id+,+Type__c+,+Guest__c+,+Description__c+,+CreatedDate+,+Delivery_Status__c+from+Consequence__c+WHERE+Guest__c='"+id+"'+AND+Delivery_Status__c='Active'+AND+(Type__c='Minor Warning'+OR+Type__c='Major Warning')",
+            headers: {
+              'Authorization': 'Bearer ' + access_token
+
+            }
+
+          };
+
+
         //we have two independent requests so we are calling two parallel requests
 
-        if (bedid != 0){
+      if (bedid != 0){
         asyncc.parallel({
                one: function(parallelCallback){
 
@@ -119,9 +136,53 @@ router.get('/detailuser/',function(req,res){
                     }));
 
 
+               },// two
+
+               three: function(parallelCallback){
+
+                 const response = (request(option3, function(error, response,body){
+
+                     if (!error && response.statusCode == 200){
+                      //no error
+                       var parsedData = JSON.parse(body);
+                      console.log(parsedData)
+                      totalSize_Consequence = parsedData["totalSize"]
+
+                     if (totalSize_Consequence == 0){
+
+                           consequence = []
+
+                     }
+                     else{ // there are some
+
+                             for(i=0;i<totalSize_Consequence;i++){
+
+                               emptyjsonobject = {}
+
+                               emptyjsonobject["warningDescription"] = parsedData["records"][i]["Description__c"]
+                               emptyjsonobject["warningDate"] = changeDateFormat(parsedData["records"][i]["CreatedDate"])
+                               emptyjsonobject["warningType"] = parsedData["records"][i]["Type__c"]
+
+                               consequence.push(emptyjsonobject)
+
+
+
+                             }
+
+                     }
+
+                       parallelCallback(null, {err: error, res: response, body: body});
+
+
+                        }
+                     else {
+                        console.log("error");
+                      }
+
+                    }));
+
+
                }
-
-
 
 
            }, function(err,results){ // parallel all final callback
@@ -135,6 +196,7 @@ router.get('/detailuser/',function(req,res){
                 "Major_warning":Major_warning,
                 "Minor_warning" :Minor_warning,
                 "Locker":Locker,
+                "Warnings" : consequence,
                 "Last_Day_Of_Stay":Last_Day_Of_Stay,
                 "Bed_name":bed_name,
                 "NIT":Nit
@@ -152,43 +214,114 @@ router.get('/detailuser/',function(req,res){
          } //
          else {
 
+           asyncc.parallel({
+              one: function(parallelCallback){
 
-           request(option, function(error, response,body){
+                request(option, function(error, response,body){
 
-               if (!error && response.statusCode == 200){
-                //no error
-                 var parsedData = JSON.parse(body);
-                 Nit = parsedData["NIT__c"];
-                 Major_warning = parsedData["Major_Warnings__c"];
-                 Minor_warning = parsedData["Minor_Warnings__c"];
-                 Locker = parsedData["Locker_Combination__c"];
-                 Last_Day_Of_Stay = parsedData["Last_Night_Long_Term_Stay__c"];
+                    if (!error && response.statusCode == 200){
+                     //no error
+                      var parsedData = JSON.parse(body);
+                      Nit = parsedData["NIT__c"];
+                      Major_warning = parsedData["Major_Warnings__c"];
+                      Minor_warning = parsedData["Minor_Warnings__c"];
+                      Locker = parsedData["Locker_Combination__c"];
+                      Last_Day_Of_Stay = parsedData["Last_Night_Long_Term_Stay__c"];
 
-                 if (Locker == null){ Locker="Not Assigned"};
-                 if (Last_Day_Of_Stay==null){Last_Day_Of_Stay = "N/A"}
-
-                 res.send({
-
-                    "Major_warning":Major_warning,
-                    "Minor_warning" :Minor_warning,
-                    "Locker":Locker,
-                    "Last_Day_Of_Stay":Last_Day_Of_Stay,
-                    "Bed_name":"Not Assigned",
-                    "NIT":Nit
+                      if (Locker == null){ Locker="Not Assigned"};
+                      if (Last_Day_Of_Stay==null){Last_Day_Of_Stay = "N/A"}
 
 
-
-                 })
+                      parallelCallback(null, {err: error, res: response, body: body});
 
 
 
 
-                  }
-               else {
-                  console.log("error");
-                }
 
-              });
+
+                       }
+                    else {
+                       console.log("error");
+                     }
+
+               });
+             }, // one over
+             two: function(parallelCallback){
+
+               const response = (request(option3, function(error, response,body){
+
+                   if (!error && response.statusCode == 200){
+                    //no error
+                     var parsedData = JSON.parse(body);
+                     console.log(parsedData)
+                     totalSize_Consequence = parsedData["totalSize"]
+
+                    if (totalSize_Consequence == 0){
+
+                          consequence = []
+
+                    }
+                    else{ // there are some
+
+                            for(i=0;i<totalSize_Consequence;i++){
+
+                              emptyjsonobject = {}
+
+                              emptyjsonobject["warningDescription"] = parsedData["records"][i]["Description__c"]
+                              emptyjsonobject["warningDate"] = changeDateFormat(parsedData["records"][i]["CreatedDate"])
+                              emptyjsonobject["warningType"] = parsedData["records"][i]["Type__c"]
+
+                              consequence.push(emptyjsonobject)
+
+
+
+
+
+
+
+
+
+
+                            }
+
+                    }
+
+
+
+                     parallelCallback(null, {err: error, res: response, body: body});
+
+
+                      }
+                   else {
+                      console.log("error");
+                    }
+
+                  }));
+
+
+             }
+
+
+
+           }, function(err,results){
+
+             res.send({
+
+                "Major_warning":Major_warning,
+                "Minor_warning" :Minor_warning,
+                "Locker":Locker,
+                "Warnings" : consequence,
+                "Last_Day_Of_Stay":Last_Day_Of_Stay,
+                "Bed_name":"Not Assigned",
+                "NIT":Nit
+
+
+
+             })
+
+
+           })
+
 
 
 
