@@ -2,7 +2,7 @@
 
 var async = require('asyncawait/async');
 //var authjson = require('../auth/auth') || null;
-var authjson = null // for github
+var authjson = null // for github auth file is hidden
 var await = require('asyncawait/await');
 const request = require('request-promise');
 
