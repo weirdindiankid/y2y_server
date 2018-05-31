@@ -2,7 +2,7 @@
 // to verify the jwt
 
 const jwt = require('jsonwebtoken');
-var authjson =  require('../auth/auth') ;
+var authjson =  require('../auth/auth') || null;
 
 var jwtsecret = process.env.jwtsecret || authjson.jwtsecret ;
 
