@@ -11,6 +11,7 @@ var getlotteryid = LotteryIdHelperFunctions["helperOne"];
 var access_token;
 var instance_url;
 var responsejson = {};   //{size:  ,records:[{"name": ,"startTime": ,"endTime": , "date"}] }
+var asyncc = require('async');
 
 //using body parser middleware to make reading http body simple
 router.use(bodyParser.urlencoded({extended: false}));

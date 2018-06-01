@@ -124,7 +124,8 @@ router.get('/events',function(req,res,next){
                             console.log(b)
 
                             var c = a.indexOf(b);
-                            if(c != -1){
+
+                            if(c != -1){// user is present inside the array
                                 emptyjobject["isRsvp'd"] = true
 
                             }else{emptyjobject["isRsvp'd"] = false }

@@ -117,6 +117,10 @@ app.post('/login',function(req,res){    //added name soos********* check
 
 
 
+                   //run the helper function here to gain the events they have rspv'd
+
+
+
                    const user = {
                      "id":obtained_id,
                      "name" : obtained_name,
