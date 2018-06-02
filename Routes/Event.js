@@ -98,7 +98,7 @@ router.get('/events',function(req,res,next){
 
 
                           //var descriptionjson = JSON.parse(description)
-                          if description = null{
+                          if (description = null){
                               emptyjobject["isRsvp'd"] = false
                           }else {
 
