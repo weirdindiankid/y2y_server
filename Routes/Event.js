@@ -97,40 +97,49 @@ router.get('/events',function(req,res,next){
                           //assuming description will always have the json
 
 
-                          var descriptionjson = JSON.parse(description)
+                          //var descriptionjson = JSON.parse(description)
+                          if description = null{
+                              emptyjobject["isRsvp'd"] = false
+                          }else {
+
+                            var users = description.split(",")
+
+                            //emptyjobject["Description"] = descriptionjson["Description"]
 
 
-                          var users = descriptionjson["Users"]
 
-                          emptyjobject["Description"] = descriptionjson["Description"]
+                            //check if user array obtained is empty or undefined
+                            if (users === undefined || users.length == 0) {
+
+                              emptyjobject["isRsvp'd"] = false
+                              }
+                            else{
+                               //users array is present
+                              var a = users
+                              var b = name+":"+id
+
+                              //a = JSON.stringify(a);
+                            //  b = JSON.stringify(b);
 
 
+                              //console.log(a)
+                              //console.log(b)
 
-                          //check if user array obtained is empty or undefined
-                          if (users === undefined || users.length == 0) {
+                              var c = a.indexOf(b);
 
-                            emptyjobject["isRsvp'd"] = false
+                              if(c != -1){// user is present inside the array
+                                  emptyjobject["isRsvp'd"] = true
+
+                              }else{emptyjobject["isRsvp'd"] = false }
+
                             }
-                          else{
-                             //users array is present
-                            var a = users
-                            var b = [name,id]
 
-                            a = JSON.stringify(a);
-                            b = JSON.stringify(b);
-
-
-                            console.log(a)
-                            console.log(b)
-
-                            var c = a.indexOf(b);
-
-                            if(c != -1){// user is present inside the array
-                                emptyjobject["isRsvp'd"] = true
-
-                            }else{emptyjobject["isRsvp'd"] = false }
 
                           }
+
+
+
+
 
 
 
