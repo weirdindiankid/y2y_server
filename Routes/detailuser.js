@@ -28,6 +28,7 @@ router.get('/detailuser/',function(req,res){
    //var id = req.params.id
 
    var id = req.data.user.id
+   var suspensionCount = 0  //salesforce's contact has no count of suspension like it does for major and minor warning counts .so suspension is counted manually
 
 
 
@@ -162,6 +163,12 @@ router.get('/detailuser/',function(req,res){
                                emptyjsonobject["warningDescription"] = parsedData["records"][i]["Description__c"]
                                emptyjsonobject["warningDate"] = changeDateFormat(parsedData["records"][i]["CreatedDate"])
                                emptyjsonobject["warningType"] = parsedData["records"][i]["Type__c"]
+                              if(parsedData["records"][i]["Type__c"] == "Suspension"){
+                                suspensionCount = suspensionCount+1
+
+                              }
+
+
                                emptyjsonobject["suspensionStartDate"] = parsedData["records"][i]["Suspension_Start_Date__c"]
                                emptyjsonobject["suspensionEndDate"] = parsedData["records"][i]["Suspension_End_Date__c"]
 
@@ -198,6 +205,7 @@ router.get('/detailuser/',function(req,res){
                 "Major_warning":Major_warning,
                 "Minor_warning" :Minor_warning,
                 "Locker":Locker,
+                "Suspension_warning": suspensionCount,
                 "Warnings" : consequence,
                 "Last_Day_Of_Stay":Last_Day_Of_Stay,
                 "Bed_name":bed_name,
@@ -272,6 +280,11 @@ router.get('/detailuser/',function(req,res){
                               emptyjsonobject["warningDescription"] = parsedData["records"][i]["Description__c"]
                               emptyjsonobject["warningDate"] = changeDateFormat(parsedData["records"][i]["CreatedDate"])
                               emptyjsonobject["warningType"] = parsedData["records"][i]["Type__c"]
+                              if(parsedData["records"][i]["Type__c"] == "Suspension"){
+                                suspensionCount = suspensionCount+1
+
+                              }
+
                               emptyjsonobject["suspensionStartDate"] = parsedData["records"][i]["Suspension_Start_Date__c"]
                               emptyjsonobject["suspensionEndDate"] = parsedData["records"][i]["Suspension_End_Date__c"]
 
@@ -315,6 +328,7 @@ router.get('/detailuser/',function(req,res){
                 "Minor_warning" :Minor_warning,
                 "Locker":Locker,
                 "Warnings" : consequence,
+                "Suspension_warning": suspensionCount,
                 "Last_Day_Of_Stay":Last_Day_Of_Stay,
                 "Bed_name":"Not Assigned",
                 "NIT":Nit
