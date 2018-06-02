@@ -74,7 +74,7 @@ router.get('/detailuser/',function(req,res){
           const option3 = {
 
             method: 'GET',
-            uri: instance_url+"/services/data/v20.0/query/?q=SELECT+id+,+Type__c+,+Guest__c+,+Description__c+,+CreatedDate+,+Delivery_Status__c+from+Consequence__c+WHERE+Guest__c='"+id+"'+AND+Delivery_Status__c='Active'+AND+(Type__c='Minor Warning'+OR+Type__c='Major Warning')",
+            uri: instance_url+"/services/data/v20.0/query/?q=SELECT+id+,+Type__c+,+Guest__c+,+Suspension_Start_Date__c+,+Suspension_End_Date__c+,+Description__c+,+CreatedDate+,+Delivery_Status__c+from+Consequence__c+WHERE+Guest__c='"+id+"'+AND+Delivery_Status__c='Active'+AND+(Type__c='Minor Warning'+OR+Type__c='Major Warning'+OR+Type__c='Suspension')",
             headers: {
               'Authorization': 'Bearer ' + access_token
 
@@ -162,6 +162,8 @@ router.get('/detailuser/',function(req,res){
                                emptyjsonobject["warningDescription"] = parsedData["records"][i]["Description__c"]
                                emptyjsonobject["warningDate"] = changeDateFormat(parsedData["records"][i]["CreatedDate"])
                                emptyjsonobject["warningType"] = parsedData["records"][i]["Type__c"]
+                               emptyjsonobject["SuspensionStartDate"] = parsedData["records"][i]["Suspension_Start_Date__c"]
+                               emptyjsonobject["SuspensionEndDate"] = parsedData["records"][i]["Suspension_End_Date__c"]
 
                                consequence.push(emptyjsonobject)
 
@@ -270,6 +272,8 @@ router.get('/detailuser/',function(req,res){
                               emptyjsonobject["warningDescription"] = parsedData["records"][i]["Description__c"]
                               emptyjsonobject["warningDate"] = changeDateFormat(parsedData["records"][i]["CreatedDate"])
                               emptyjsonobject["warningType"] = parsedData["records"][i]["Type__c"]
+                              emptyjsonobject["SuspensionStartDate"] = parsedData["records"][i]["Suspension_Start_Date__c"]
+                              emptyjsonobject["SuspensionEndDate"] = parsedData["records"][i]["Suspension_End_Date__c"]
 
                               consequence.push(emptyjsonobject)
 
