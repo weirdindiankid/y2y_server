@@ -270,12 +270,12 @@ router.post('/events',function(req,res){
 
    },function(description, callback){
       // console.log(arg1)
-  console.log(eventFlag)
+
    try{
      if (eventFlag == "addUser"){
 
         var desc = addUser(description,userobject)
-        console.log(desc)
+
         callback(null,desc);
 
       }
@@ -316,9 +316,9 @@ router.post('/events',function(req,res){
 
          try{
             request(option2, function(error, response,body){
-              console.log(response.statusCode)
 
-              if (response.statusCode == 204){ res.send(userobject[0]+" Sucess")}
+
+              if (response.statusCode == 204){ res.send("Sucess")}
               else{res.status(400).send({"isError":"true"})}
             })
          }

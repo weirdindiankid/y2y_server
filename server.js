@@ -34,6 +34,7 @@ var actionRouter = require("./Routes/actionitem");
 var access_token="random";
 
 var authjson = process.env || require('./auth/auth');
+//var authjson = require('./auth/auth');
 
 var jwtsecret = authjson.jwtsecret;
 
@@ -128,6 +129,8 @@ app.post('/login',function(req,res){    //added name soos********* check
                    }
 
                    jwt.sign({user},jwtsecret, (err,token) => {
+
+                     console.log("token"+token)
 
                       res.json({token: token,
                             "isValid":"valid",
