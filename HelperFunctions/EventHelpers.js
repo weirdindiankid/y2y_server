@@ -57,35 +57,50 @@ module.exports = {
 "helperThree":  function(description,id_Name_Array){
     // getting description
     //convert json string to json object, check if id_Name_Array exist in the user  and finally add id_Name_Array to the description json
-    var descriptionjson = JSON.parse(description)
+    //var descriptionjson = JSON.parse(description)
 
-    var users = descriptionjson["Users"]
+    if (description === null){
+        // special case
+        descriptionjson = id_Name_Array
+        return(descriptionjson)
+    }else {
 
-    if (users.length != 0){
-         //1st check if user exist
-         var a = users
-         var b = id_Name_Array
+      var users = description.split(",")
 
-         a = JSON.stringify(a);
-         b = JSON.stringify(b);
+      if (users.length != 0){
+           //1st check if user exist
+           var a = users
+           var b = id_Name_Array
+
+           //a = JSON.stringify(a);
+           //b = JSON.stringify(b);
 
 
 
 
-         var c = a.indexOf(b);
-         if(c != -1){
-             // if user is already there
-             // do nothing
-             return(JSON.stringify(descriptionjson))
+           var c = a.indexOf(b);
+           if(c != -1){
+               // if user is already there
+               // do nothing
+               return(descriptionjson)
+
+           }
 
          }
+         //add the user if user array is empty or if user doesn't exist
+         //users.push(id_Name_Array)
+         //descriptionjson["Users"] = users //adding the new array
+         descriptionjson = description+","+id_Name_Array
 
-       }
-       //add the user if user array is empty or if user doesn't exist
-       users.push(id_Name_Array)
-       descriptionjson["Users"] = users //adding the new array
+         return(descriptionjson)
 
-       return(JSON.stringify(descriptionjson))
+
+    }
+
+
+
+
+
 
 
 
@@ -96,39 +111,47 @@ module.exports = {
 "helperFour" : function(description,id_Name_Array){
   //getting descriptionjson
   //convert json string to json object, check if id_Name_Array exist in the user  and remove id_Name_Array from the description json
-  var descriptionjson = JSON.parse(description)
+  //var descriptionjson = JSON.parse(description)
 
-  var users = descriptionjson["Users"]
+  if (description === null){
+      return(description)
+  }
+  else{
+    var users = description.split(",")
 
-    if (users.length != 0){
-
-
-      var a = users
-      var b = id_Name_Array
-
-      a = JSON.stringify(a);
-      b = JSON.stringify(b);
+      if (users.length != 0){
 
 
+        var a = users
+        var b = id_Name_Array
+
+        //a = JSON.stringify(a);
+        //b = JSON.stringify(b);
 
 
-      var c = a.indexOf(b);
-      if(c != -1){
-          // if user is there
-          // remove it
-          index = users.indexOf(id_Name_Array)
-
-          users.splice(index,1)
-
-          descriptionjson["Users"] = users
-
-          return(JSON.stringify(descriptionjson))
-
-      } else{return(JSON.stringify(descriptionjson))}
 
 
-    }
-    return(JSON.stringify(descriptionjson))
+        var c = a.indexOf(b);
+        if(c != -1){
+            // if user is there
+            // remove it
+            index = users.indexOf(id_Name_Array)
+
+            users.splice(index,1)
+
+            descriptionjson = users.join()
+
+            return(descriptionjson)
+
+        } else{return(descriptionjson)}
+
+
+      }
+      return(descriptionjson)
+
+  }
+
+
 
   }
 

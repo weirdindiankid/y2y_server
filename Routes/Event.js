@@ -210,7 +210,7 @@ router.post('/events',function(req,res){
   var eventId = req.body.eventId
   var eventFlag = req.body.flag
   var description
-  var userobject = [name,id]
+  var userobject = name+":"+id
 
   //there would be three synchrous calls so using async waterfall
    waterfall([function(callback){
