@@ -162,8 +162,8 @@ router.get('/detailuser/',function(req,res){
                                emptyjsonobject["warningDescription"] = parsedData["records"][i]["Description__c"]
                                emptyjsonobject["warningDate"] = changeDateFormat(parsedData["records"][i]["CreatedDate"])
                                emptyjsonobject["warningType"] = parsedData["records"][i]["Type__c"]
-                               emptyjsonobject["SuspensionStartDate"] = parsedData["records"][i]["Suspension_Start_Date__c"]
-                               emptyjsonobject["SuspensionEndDate"] = parsedData["records"][i]["Suspension_End_Date__c"]
+                               emptyjsonobject["suspensionStartDate"] = parsedData["records"][i]["Suspension_Start_Date__c"]
+                               emptyjsonobject["suspensionEndDate"] = parsedData["records"][i]["Suspension_End_Date__c"]
 
                                consequence.push(emptyjsonobject)
 
@@ -272,8 +272,8 @@ router.get('/detailuser/',function(req,res){
                               emptyjsonobject["warningDescription"] = parsedData["records"][i]["Description__c"]
                               emptyjsonobject["warningDate"] = changeDateFormat(parsedData["records"][i]["CreatedDate"])
                               emptyjsonobject["warningType"] = parsedData["records"][i]["Type__c"]
-                              emptyjsonobject["SuspensionStartDate"] = parsedData["records"][i]["Suspension_Start_Date__c"]
-                              emptyjsonobject["SuspensionEndDate"] = parsedData["records"][i]["Suspension_End_Date__c"]
+                              emptyjsonobject["suspensionStartDate"] = parsedData["records"][i]["Suspension_Start_Date__c"]
+                              emptyjsonobject["suspensionEndDate"] = parsedData["records"][i]["Suspension_End_Date__c"]
 
                               consequence.push(emptyjsonobject)
 
