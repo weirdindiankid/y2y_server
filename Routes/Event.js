@@ -90,7 +90,7 @@ router.get('/events',function(req,res,next){
                           emptyjobject["startTime"] =  changeDateFormat(records[i]["StartDateTime"])
                           emptyjobject["EndTime"] =  changeDateFormat(records[i]["EndDateTime"])
 
-                           if(records[i]["Location"] === null){emptyjobject["Location"]=="N/A"}
+                           if(records[i]["Location"] === null){emptyjobject["Location"]="N/A"}
                            else{emptyjobject["Location"] = records[i]["Location"]}
                           //emptyjobject["Location"] = records[i]["Location"]
 
