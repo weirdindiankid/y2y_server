@@ -2,8 +2,8 @@
 // to verify the jwt
 
 const jwt = require('jsonwebtoken');
-var authjson =  require('../auth/auth') || null;
-//var authjson = null // for github auth file is hidden
+//var authjson =  require('../auth/auth') || null;
+var authjson = null // for github auth file is hidden
 
 var jwtsecret = process.env.jwtsecret || authjson.jwtsecret ;
 
