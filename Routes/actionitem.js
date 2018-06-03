@@ -38,13 +38,12 @@ router.get('/actionitems/',function(req,res){
 
    if(action_id["size"]!=0){
      // when size is not zero
-    console.log(action_id)
+    //console.log(action_id)
     const option = {
           method: 'GET',
           uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+Id+,+Step_Number__c+,Action_Item__c+,+CompletedCB__c+from+Action_Item_Step__c+WHERE+"+action_id["url"],
           headers: {
             'Authorization': 'Bearer ' + access_token
-
           }
        };
 
@@ -55,8 +54,12 @@ router.get('/actionitems/',function(req,res){
              var parsedData = JSON.parse(body);
              var totalSize = parsedData["totalSize"]
 
-             console.log(parsedData);
+             //console.log(parsedData);
+             //console.log("user"+parsedData)
              var i;
+
+
+             if(totalSize == 0){res.send(action_id)}
 
              for (i=0;i<totalSize;i++){
 

@@ -45,7 +45,7 @@ module.exports = {
 
 
             }
-            else{  //assuming both are dependent with each other
+            else{    //assuming both are dependent with each other
                      var totalSize = parsedData["totalSize"]
                      action_id["size"] = totalSize
                      var i;

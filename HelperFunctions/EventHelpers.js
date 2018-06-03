@@ -1,5 +1,6 @@
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
+var time = require('time')(Date);
 
 //exporting json object which contains helper functions
 
@@ -9,6 +10,7 @@ module.exports = {
 "helperOne" :  function(d){
               //this helper function would convert GMT time of salesforce's Event to EST and return json with day, time,month
               var date = new Date(d.slice(0,-5))
+              date.setTimezone("America/New_York"); // converting GMT to EST
               var year = date.getFullYear();
               var month = date.getMonth()+1;
               var day = date.getDate();
