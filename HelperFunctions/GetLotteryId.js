@@ -37,7 +37,7 @@ module.exports = {
 
 
   const option = {
-      method: 'POST',
+      method: 'GET',
       uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+id+,+Lottery_Date__c+,+Type__c+from+Lottery__c+WHERE+Lottery_Date__c="+date+"+AND+(Type__C='E-Bed'+OR+Type__C='Long Term')",
       headers: {
         'Authorization': 'Bearer ' + access_token
