@@ -108,7 +108,7 @@ module.exports = {
    catch(error){
      console.log("inside catch")
     //console.log(error);
-    //Promise.reject(error);
+    Promise.reject(error);
 
   }
 
