@@ -202,6 +202,10 @@ router.get('/lottery',function(req,res){
 
 
     })// auth then close
+    .catch(function(error){
+
+       res.status(400).send("error");
+    });
 
 }); // lottery post
 
