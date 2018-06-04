@@ -93,8 +93,8 @@ module.exports = {
 
        }
     else {
-
-       console.log(error);
+       console.log("inside else")
+       //console.log(error);
        Promise.reject(error);
 
      }
@@ -107,7 +107,7 @@ module.exports = {
    }
    catch(error){
      console.log("inside catch")
-    console.log(error);
+    //console.log(error);
     //Promise.reject(error);
 
   }
