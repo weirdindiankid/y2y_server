@@ -191,7 +191,7 @@ router.get('/lottery',function(req,res){
                })//inner callback
              }// if loop
              else{
-                res.send({
+                res.status(400).send({
                   "e-bed":"N/A",
                   "Long Term":"N/A"
 
