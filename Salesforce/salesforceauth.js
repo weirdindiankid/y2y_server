@@ -40,6 +40,8 @@ var auth = async (function(id){
       else {
          console.log("error");
          //send some http status error to android later
+
+
        }
 
 

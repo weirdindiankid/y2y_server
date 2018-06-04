@@ -115,7 +115,7 @@ router.get('/lottery',function(req,res){
 
                           } // iferror
                             else {
-                               console.log("error");
+                               res.status(500).send("Server Error")
                              }
 
                            }));
@@ -163,7 +163,7 @@ router.get('/lottery',function(req,res){
 
                                }
                             else {
-                               console.log("error");
+                                res.status(500).send("Server Error");
                              }
 
                            }));
@@ -181,7 +181,7 @@ router.get('/lottery',function(req,res){
 
 
                         //final
-                  res.send({
+                  res.status(200).send({
                     "e-bed":result["one"]["res"],
                     "Long Term":result["two"]["res"]  //long term
 
@@ -191,7 +191,7 @@ router.get('/lottery',function(req,res){
                })//inner callback
              }// if loop
              else{
-                res.status(400).send({
+                res.status(200).send({
                   "e-bed":"N/A",
                   "Long Term":"N/A"
 
