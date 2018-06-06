@@ -87,6 +87,9 @@ module.exports = {
     return ([lottery_id,access_token,instance_url]);
 
    })
+   .catch(function(err){
+          return promise.reject()
+   })
 
 
 

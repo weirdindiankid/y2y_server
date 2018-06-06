@@ -75,7 +75,10 @@ module.exports = {
                      }
                    }
 
-                });
+                })
+                .catch(function(err){
+                       return promise.reject()
+                })
 
 
 
@@ -115,6 +118,9 @@ module.exports = {
 
              return(tokens)
 
+       })
+       .catch(function(err){
+              return promise.reject()
        })
 
 
