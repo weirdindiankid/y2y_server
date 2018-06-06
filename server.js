@@ -33,8 +33,8 @@ var actionRouter = require("./Routes/actionitem");
 
 var access_token="random";
 
-//var authjson = process.env || require('./auth/auth');
-var authjson = require('./auth/auth');
+var authjson = process.env || require('./auth/auth');
+//var authjson = require('./auth/auth');
 
 var jwtsecret = authjson.jwtsecret;
 
@@ -176,7 +176,7 @@ app.post('/login',function(req,res){    //added name soos********* check
 
             else {
              //salesforce responsed with an error
-              
+
               //res.send("Network Error")
                 res.status(400).send("error")
 
