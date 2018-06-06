@@ -46,7 +46,7 @@ var id;
 
 var bed_id;
 
-var isLoggedIn = false;
+
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -91,6 +91,7 @@ app.post('/login',function(req,res){    //added name soos********* check
 
             if (!error && response.statusCode == 200){
               //no error
+              var isLoggedIn = false;
               var parsedData = JSON.parse(body);
 
               //check if parsedData AKA response from salesforce is empty??
@@ -110,15 +111,15 @@ app.post('/login',function(req,res){    //added name soos********* check
 
                  if (obtained_password == password){
                    //password matches
-                   //console.log(`Client ${temp_client_id.io} has successful logged in`);
-                   console.log("you have logged in")
+
+
 
                    isLoggedIn = true;
                    //res.send('valid');  // send the json
 
 
 
-                   //run the helper function here to gain the events they have rspv'd
+
 
 
 
@@ -177,8 +178,8 @@ app.post('/login',function(req,res){    //added name soos********* check
             else {
              //salesforce responsed with an error
 
-              //res.send("Network Error")
-                res.status(400).send("error")
+
+                res.status(500).send("error")
 
             }
 
@@ -187,7 +188,10 @@ app.post('/login',function(req,res){    //added name soos********* check
 
 
 
-   });
+   }) // error propagate from salesforce auth
+   .catch(function(error){
+     res.status(500).send("error");
+   })
 
  });
 
