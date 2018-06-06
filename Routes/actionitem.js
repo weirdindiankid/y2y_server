@@ -123,7 +123,7 @@ router.post('/actionitems/',function(req,res){
   var flag = req.body.flag;
 
 
-console.log(body)
+console.log(req.body)
 
 
 
@@ -210,7 +210,7 @@ router.post('/actionitemstep/',function(req,res){
   var size = req.body.size
   var promises =[];
 
-  console.log(body)
+  console.log(req.body)
 
   Salesforceauth("id").then(function(tokens){
 
