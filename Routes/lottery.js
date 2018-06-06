@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 var Salesforceauth = require("../Salesforce/salesforceauth");
-const request = require('request-promise');
+const request = require('request');
 var LotteryIdHelperFunctions =  require("../HelperFunctions/GetLotteryId");
 
 var getlotteryid = LotteryIdHelperFunctions["helperOne"];
@@ -115,7 +115,7 @@ router.get('/lottery',function(req,res){
 
                           } // iferror
                             else {
-                               res.status(500).send("Server Error")
+                               res.status(500).send("Server Error") // salesforce gave http status error code
                              }
 
                            }));
@@ -203,6 +203,9 @@ router.get('/lottery',function(req,res){
 
     })// auth then close
     .catch(function(error){
+
+       console.log("inside error")
+       console.log(error)
 
        res.status(400).send("error");
     });

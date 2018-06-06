@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 var Salesforceauth = require("../Salesforce/salesforceauth");
-const request = require('request-promise');
+const request = require('request');
 
 var access_token;
 var instance_url;
@@ -63,13 +63,13 @@ router.post('/edituser',function(req,res){
 
                     if (response.statusCode == 201){  //201 means created
                       //no error
-                      res.send({"isSucess":"success"})
+                      res.status(201).send({"isSucess":"success"})
 
 
                     }
 
                     else {
-                      res.send("error")
+                      res.status(400).send("error")
                     }
 
                   });
@@ -129,13 +129,13 @@ router.post('/feedback',function(req,res){
 
                     if (response.statusCode == 201){  //201 means created
                       //no error
-                      res.send("sucess")
+                      res.status(201).send("sucess")
 
 
                     }
 
                     else {
-                      res.send("error")
+                      res.status(400).send("error")
                     }
 
                   });

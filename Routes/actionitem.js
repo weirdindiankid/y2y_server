@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 var Salesforceauth = require("../Salesforce/salesforceauth");
-const request = require('request-promise');
+const request = require('request');
 const ActionItemHelperFunctions = require("../HelperFunctions/ActionItemHelperFunctions")
 
 var async = require('asyncawait/async');
@@ -46,7 +46,7 @@ router.get('/actionitems/',function(req,res){
             'Authorization': 'Bearer ' + access_token
           }
        };
-
+    try{
        const response = (request(option, function(error, response,body){
 
            if (!error && response.statusCode == 200){
@@ -83,7 +83,8 @@ router.get('/actionitems/',function(req,res){
 
            }
            else{
-              console.log("error")
+
+              res.status(400).send("error")
 
            }
 
@@ -94,10 +95,20 @@ router.get('/actionitems/',function(req,res){
 
 
     }))
-  }
-      else {res.send({"size":"0"})} //when there are no task
+  }catch(error){res.status(400).send("error")}
 
-       })
+
+  }
+      else {res.status(200).send({"size":"0"})} //when there are no task
+
+       }).catch(function(error){
+
+          console.log("inside error")
+          console.log(error)
+
+          res.status(500).send("error");
+       });
+
 
 
 
@@ -154,6 +165,7 @@ router.post('/actionitems/',function(req,res){
             }
 
              }
+             else{ res.status(400).send("error")}
 
          });
 
@@ -161,9 +173,9 @@ router.post('/actionitems/',function(req,res){
 
          }
          catch(error){
-           console.log("inside catch")
-          console.log(error);
-          Promise.reject(error);
+
+             res.status(400).send("error")
+
 
         }
 
@@ -173,7 +185,13 @@ router.post('/actionitems/',function(req,res){
 
 
 
-  })
+  }).catch(function(error){
+
+     console.log("inside error")
+     console.log(error)
+
+     res.status(500).send("error");
+  });
 
 
 
@@ -192,17 +210,22 @@ router.post('/actionitemstep/',function(req,res){
     instance_url = tokens[2];
     access_token = tokens[1];
 
+
+
   for(i=0;i<size;i++){
 
-   promises.push(updateactionstep(req.body.records[i]));
+   promises.push(updateactionstep([req.body.records[i],access_token,instance_url]));
+
   }
   Promise.all(promises).then(async(function(x){
 
 
-   //console.log(x)
 
 
-    const option = {
+   console.log(x)
+
+
+  const option = {
         method: 'POST',
         uri: instance_url+"/services/data/v20.0/sobjects/Action_Item_Update__c/",  //action item
         headers: {
@@ -226,15 +249,18 @@ router.post('/actionitemstep/',function(req,res){
 
 
 
+
+
+
           if (!error && response.statusCode == 201){
            //no error
             var parsedData = JSON.parse(body);
 
 
             if (parsedData["success"]==true){
-               res.send({"issucess": "Success"})
+               res.status(201).send({"issucess": "Success"})
 
-            }
+            }else{res.status(400).send("error");}
 
              }
 
@@ -244,22 +270,21 @@ router.post('/actionitemstep/',function(req,res){
 
          }
          catch(error){
-           console.log("inside catch")
-          console.log(error);
-           res.send({"issucess": "Error"});
+           res.status(400).send("error");
 
         }
 
 
+      }))
 
 
+    }).catch(function(error){
 
+       console.log("inside error")
+       console.log(error)
 
-
-  }))
-
-
-})
+       res.status(500).send("error");
+    });
 
 })
 

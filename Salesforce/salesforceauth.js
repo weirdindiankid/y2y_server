@@ -1,8 +1,8 @@
 //salesforce doesn't have continous connection system. Hence need to do rest call everytime
 
 var async = require('asyncawait/async');
-//var authjson = require('../auth/auth') || null;
-var authjson = null // for github auth file is hidden
+var authjson = require('../auth/auth') || null;
+//var authjson = null // for github auth file is hidden
 var await = require('asyncawait/await');
 const request = require('request-promise');
 
@@ -26,39 +26,19 @@ var auth = async (function(id){
 
         }
      };
-    try{
-     const response = await (request(option, function(error, response,body){
 
-      if (!error && response.statusCode == 200){
+     return request(option)
+     .then(function(body){
+
        //no error
         var parsedData = JSON.parse(body);
         access_token = parsedData["access_token"];
-        instance_url = parsedData["instance_url"]
+        instance_url = parsedData["instance_url"];
+
+        return ([id,access_token,instance_url]);
 
 
-         }
-      else {
-         console.log("error");
-         //send some http status error to android later
-
-
-       }
-
-
-     }));
-
-     console.log(access_token)
-     return Promise.resolve([id,access_token,instance_url]);
-
-     }
-    catch(error){
-      console.log(error);
-      Promise.reject(error);
-
-    }
-
-
-
+     });
 
 });
 

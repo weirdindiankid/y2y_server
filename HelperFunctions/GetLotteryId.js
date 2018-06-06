@@ -44,19 +44,15 @@ module.exports = {
 
       }
    };
-  try{
-   const response =  await(request(option, function(error, response,body){
-
-    if (!error && response.statusCode == 200){
+   return request(option)
+   .then(function(body){
+     // needs to be status 200 or have no error
      //no error
       var parsedData = JSON.parse(body);
 
 
       //bed_id = parsedData["records"][0]["Bed__c"];
-
-
-
-      if (parsedData["totalSize"]==0){
+    if (parsedData["totalSize"]==0){
 
           lottery_id["size"] = 0;
 
@@ -88,30 +84,9 @@ module.exports = {
 
       }
 
+    return ([lottery_id,access_token,instance_url]);
 
-
-
-       }
-    else {
-       console.log("inside else")
-       //console.log(error);
-       Promise.reject(error);
-
-     }
-
-
-   }));
-
-   return Promise.resolve([lottery_id,access_token,instance_url]);
-
-   }
-   catch(error){
-     console.log("inside catch")
-    //console.log(error);
-    Promise.reject(error);
-
-  }
-
+   })
 
 
 

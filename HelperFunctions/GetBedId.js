@@ -46,55 +46,21 @@ module.exports = {
 
          }
       };
-     try{
-      const response =  await(request(option, function(error, response,body){
-
-       if (!error && response.statusCode == 200){
-
+      return request(option)
+      .then(function(body){
 
         //no error
          var parsedData = JSON.parse(body);
 
          if (parsedData["totalSize"] != 0){
 
-         bed_id = parsedData["records"][0]["Bed__c"];
+            bed_id = parsedData["records"][0]["Bed__c"];
 
-       }
-        else {
+        }else { bed_id = 0}
 
-          console.log("no bed")
+          return ([bed_id,access_token,instance_url]);
 
-          bed_id = 0
-        }
-
-
-
-
-          }
-       else {
-
-          console.log(error);
-
-        }
-
-
-      }));
-
-      return Promise.resolve([bed_id,access_token,instance_url]);
-
-      }
-      catch(error){
-        console.log("inside catch")
-       console.log(error);
-       Promise.reject(error);
-
-     }
-
-
-
-
-
-
+      })
 
 
 })

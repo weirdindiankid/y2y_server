@@ -63,7 +63,7 @@ module.exports = {
 
     if (description === null){
         // special case
-        console.log("hello")
+        
         descriptionjson = id_Name_Array
         return(descriptionjson)
     }else {

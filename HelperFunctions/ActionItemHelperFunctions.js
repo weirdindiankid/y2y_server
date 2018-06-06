@@ -26,22 +26,17 @@ module.exports = {
          };
 
 
-        try{
-         const response =  await(request(option, function(error, response,body){
 
-          if (!error && response.statusCode == 200){
-           //no error
+         return request(option)
+         .then(function(body){
+
             var parsedData = JSON.parse(body);
-
-
-            //bed_id = parsedData["records"][0]["Bed__c"];
-
 
 
             if (parsedData["totalSize"]==0){
 
                 action_id["size"] = 0;
-                return Promise.resolve(action_id)
+                return (action_id)
 
 
             }
@@ -72,41 +67,15 @@ module.exports = {
 
                         action_id["records"]=arr
                         action_id["url"] = url
-                        //return (action_id)
+                        return ([action_id,access_token,instance_url]);
+
                       }
 
 
-
-
                      }
+                   }
 
-
-
-
-          }
-
-
-
-
-            }
-          else {
-
-             console.log(error);
-
-           }
-
-
-         }));
-
-         return Promise.resolve([action_id,access_token,instance_url]);
-
-         }
-         catch(error){
-           console.log("inside catch")
-          console.log(error);
-          Promise.reject(error);
-
-        }
+                });
 
 
 
@@ -140,33 +109,13 @@ module.exports = {
 
       };
 
-  try{
-       const response =  await(request(option, function(error, response,body){
 
-        if (response.statusCode == 204){
-         //no error
-             console.log(instance_url)
-             //return Promise.resolve(["Success",access_token,instance_url]);
+       return request(option)
+       .then(function(body){
 
-        }
-        else{
+             return(tokens)
 
-          Promise.reject(error);
-        }
-
-
-       }));
-          return Promise.resolve(tokens)
-
-
-       }
-       catch(error){
-         console.log("inside catch")
-        console.log(error);
-        Promise.reject(error);
-
-      }
-
+       })
 
 
 
@@ -180,6 +129,8 @@ module.exports = {
   access_token = tokens[1];
 
   //id = x //x has action item step and
+
+
   //console.log(x)
 
   const option = {
@@ -199,28 +150,15 @@ module.exports = {
 
       };
 
-  try{
-       const response =  await(request(option, function(error, response,body){
 
-        if (!error && response.statusCode == 204){
-         //no error
+      return request(option)
+      .then(function(body){
 
-             return Promise.resolve("success");
+            
 
+            return(tokens)
 
-           }
-
-       }));
-
-
-
-       }
-       catch(error){
-         console.log("inside catch")
-        console.log(error);
-        Promise.reject(error);
-
-      }
+      })
 
 
 

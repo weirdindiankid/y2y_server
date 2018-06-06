@@ -11,7 +11,7 @@ var RemoveUser = eventHelperFunctions["helperFour"]
 
 var await = require('asyncawait/await');
 
-const request = require('request-promise');
+const request = require('request');
 var waterfall = require('async-waterfall');
 // add async and await and response
 var access_token;
@@ -171,7 +171,7 @@ router.get('/events',function(req,res,next){
 
 
           }else{
-            console.log(error)
+
             res.status(400).send({"isError":"true"})
           }
 
@@ -327,7 +327,7 @@ router.post('/events',function(req,res){
             })
          }
          catch(error){
-           res.status(400).send({"isError2":"true"})
+           res.status(400).send({"isError":"true"})
          }
 
 

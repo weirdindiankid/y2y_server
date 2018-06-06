@@ -3,7 +3,7 @@ var asyncc = require('async');
 const router = express.Router();
 const bodyParser = require('body-parser');
 var Salesforceauth = require("../Salesforce/salesforceauth");
-const request = require('request-promise');
+const request = require('request');
 var BedIdHelperFunctions =  require("../HelperFunctions/GetBedId");
 
 var eventHelperFunctions =  require("../HelperFunctions/EventHelpers"); //borrowing a helper
@@ -109,7 +109,8 @@ router.get('/detailuser/',function(req,res){
 
                         }
                      else {
-                        console.log("error");
+
+                          res.status(400).send("error")
                       }
 
                     }));
@@ -131,7 +132,7 @@ router.get('/detailuser/',function(req,res){
 
                         }
                      else {
-                        console.log("error");
+                          res.status(400).send("error");
                       }
 
                     }));
@@ -185,7 +186,7 @@ router.get('/detailuser/',function(req,res){
 
                         }
                      else {
-                        console.log("error");
+                          res.status(400).send("error")
                       }
 
                     }));
@@ -200,7 +201,7 @@ router.get('/detailuser/',function(req,res){
 
 
 
-             res.send({
+             res.status(200).send({
 
                 "Major_warning":Major_warning,
                 "Minor_warning" :Minor_warning,
@@ -251,7 +252,7 @@ router.get('/detailuser/',function(req,res){
 
                        }
                     else {
-                       console.log("error");
+                        res.status(400).send("error");
                      }
 
                });
@@ -310,7 +311,7 @@ router.get('/detailuser/',function(req,res){
 
                       }
                    else {
-                      console.log("error");
+                        res.status(400).send("error");
                     }
 
                   }));
@@ -322,7 +323,7 @@ router.get('/detailuser/',function(req,res){
 
            }, function(err,results){
 
-             res.send({
+             res.status(200).send({
 
                 "Major_warning":Major_warning,
                 "Minor_warning" :Minor_warning,
@@ -351,6 +352,13 @@ router.get('/detailuser/',function(req,res){
 
 
    })
+   .catch(function(error){
+
+      console.log("inside error")
+      console.log(error)
+
+      res.status(500).send("error");
+   });
 
 
 
