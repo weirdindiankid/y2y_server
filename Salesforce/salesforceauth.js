@@ -15,7 +15,7 @@ var auth = async (function(id){
 
 
   const option = {
-        method: 'POSTs',
+        method: 'POST',
         uri: `https://test.salesforce.com/services/oauth2/token`,
         qs: {
           grant_type: "password",
@@ -40,7 +40,7 @@ var auth = async (function(id){
 
      })
      .catch(function(error){
-       return Promise.reject("error");
+       return Promise.reject(error);
      })
 
 });

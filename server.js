@@ -190,6 +190,7 @@ app.post('/login',function(req,res){    //added name soos********* check
 
    }) // error propagate from salesforce auth
    .catch(function(error){
+
      res.status(500).send("error");
    })
 
