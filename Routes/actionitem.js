@@ -30,7 +30,9 @@ router.get('/actionitems/',function(req,res){
   Salesforceauth(id).then(action).then(function(tokens){
 
 
+
    var action_id = tokens[0];
+   console.log(tokens)
    instance_url = tokens[2];
    access_token = tokens[1];
 

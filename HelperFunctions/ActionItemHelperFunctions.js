@@ -36,7 +36,7 @@ module.exports = {
             if (parsedData["totalSize"]==0){
 
                 action_id["size"] = 0;
-                return (action_id)
+                return ([action_id,access_token,instance_url])
 
 
             }
@@ -154,7 +154,7 @@ module.exports = {
       return request(option)
       .then(function(body){
 
-            
+
 
             return(tokens)
 
