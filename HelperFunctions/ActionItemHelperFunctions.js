@@ -159,6 +159,9 @@ module.exports = {
             return(tokens)
 
       })
+      .catch(function(err){
+             return promise.reject()
+      })
 
 
 
