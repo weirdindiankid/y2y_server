@@ -123,6 +123,9 @@ router.post('/actionitems/',function(req,res){
   var flag = req.body.flag;
 
 
+console.log(body)
+
+
 
   Salesforceauth(flag).then(updateaction).then(function(tokens){
 
@@ -206,6 +209,8 @@ router.post('/actionitemstep/',function(req,res){
   var comment = req.body.comment;
   var size = req.body.size
   var promises =[];
+
+  console.log(body)
 
   Salesforceauth("id").then(function(tokens){
 

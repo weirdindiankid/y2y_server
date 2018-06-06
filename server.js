@@ -6,7 +6,7 @@ var http =require('http').Server(app);
 
 const bodyParser = require('body-parser');
 
-const request = require('request-promise');
+const request = require('request');
 
 var async = require('asyncawait/async');
 var await = require('asyncawait/await');
