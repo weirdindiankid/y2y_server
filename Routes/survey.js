@@ -63,7 +63,7 @@ router.post('/edituser',function(req,res){
 
                     if (response.statusCode == 201){  //201 means created
                       //no error
-                      res.status(201).send({"isSucess":"success"})
+                      res.status(201).send("success")
 
 
                     }
