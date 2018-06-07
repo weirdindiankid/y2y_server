@@ -62,6 +62,7 @@ module.exports = {
 
       })
       .catch(function(err){
+             console.log("here")
              return Promise.reject()
       })
 
