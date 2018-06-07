@@ -354,7 +354,7 @@ router.get('/detailuser/',function(req,res){
    })
    .catch(function(error){
 
-      console.log("inside error")
+
       console.log(error)
 
       res.status(500).send("error");

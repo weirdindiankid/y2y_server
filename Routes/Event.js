@@ -182,18 +182,13 @@ router.get('/events',function(req,res,next){
            res.status(400).send({"isError":"true"})
      }
 
-     //console.log('hello inside the event'+id);
+   })
+   .catch(function(error){
 
+      console.log("inside error")
+      console.log(error)
 
-
-
-
-    //res.status(200).send({"Hello":"Hello"})
-
-
-
-
-
+      res.status(500).send("error");
    });
 
 
@@ -336,11 +331,19 @@ router.post('/events',function(req,res){
 
 
 
-    })
+          })
 
 
 
-})
+      })
+      .catch(function(error){
+
+
+         console.log(error)
+
+         res.status(500).send("error");
+      });
+
 
 
 
