@@ -24,7 +24,8 @@ var auth = async (function(id){
   				username: process.env.myusername || authjson.myusername ,
           password: process.env.mypassword || authjson.mypassword
 
-        }
+        },
+        timeout: 4000 // 4 second second timeout
      };
 
      return request(option)

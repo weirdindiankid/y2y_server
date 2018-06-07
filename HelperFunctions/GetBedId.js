@@ -44,7 +44,8 @@ module.exports = {
          headers: {
            'Authorization': 'Bearer ' + access_token
 
-         }
+         },
+         timeout: 4000 // 4 second second timeout
       };
       return request(option)
       .then(function(body){

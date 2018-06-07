@@ -46,7 +46,8 @@ router.get('/actionitems/',function(req,res){
           uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+Id+,+Step_Number__c+,Action_Item__c+,+CompletedCB__c+from+Action_Item_Step__c+WHERE+"+action_id["url"],
           headers: {
             'Authorization': 'Bearer ' + access_token
-          }
+          },
+          timeout: 4000 // 4 second second timeout
        };
     try{
        const response = (request(option, function(error, response,body){
@@ -86,7 +87,8 @@ router.get('/actionitems/',function(req,res){
            }
            else{
 
-              res.status(400).send("error")
+
+              res.status(500).send("error")
 
            }
 
@@ -123,7 +125,7 @@ router.post('/actionitems/',function(req,res){
   var flag = req.body.flag;
 
 
-console.log(req.body)
+
 
 
 
@@ -150,7 +152,8 @@ console.log(req.body)
   	        "Update__c" : comment
 
 
-          })
+          }),
+          timeout: 4000 // 4 second second timeout
 
         };
 
@@ -170,7 +173,7 @@ console.log(req.body)
             }
 
              }
-             else{ res.status(400).send("error")}
+             else{ res.status(500).send("error")}
 
          });
 
@@ -211,6 +214,7 @@ router.post('/actionitemstep/',function(req,res){
   var promises =[];
 
   console.log(req.body)
+
 
   Salesforceauth("id").then(function(tokens){
 

@@ -42,7 +42,8 @@ module.exports = {
       headers: {
         'Authorization': 'Bearer ' + access_token
 
-      }
+      },
+      timeout: 4000 // 4 second second timeout
    };
    return request(option)
    .then(function(body){
@@ -88,6 +89,7 @@ module.exports = {
 
    })
    .catch(function(err){
+          console.log("timeout check")
           return Promise.reject()
    })
 

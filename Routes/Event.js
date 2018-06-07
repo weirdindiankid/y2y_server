@@ -43,7 +43,8 @@ router.get('/events',function(req,res,next){
        headers: {
          'Authorization': 'Bearer ' + access_token
 
-       }
+       },
+       timeout: 4000 // 4 second second timeout
 
      }; // option close
 
@@ -172,7 +173,7 @@ router.get('/events',function(req,res,next){
 
           }else{
 
-            res.status(400).send({"isError":"true"})
+            res.status(500).send({"isError":"true"})
           }
 
        });
@@ -216,12 +217,13 @@ router.post('/events',function(req,res){
 
 
      const option = {
-       method: 'Get',
+       method: 'GET',
        uri : instance_url+"/services/data/v20.0/query/?q=SELECT+Subject+,+id+,+Description+from+Event+WHERE+id='"+eventId+"'",
        headers: {
          'Authorization': 'Bearer ' + access_token
 
-       }
+       },
+       timeout: 4000 // 4 second second timeout
 
      };
 
@@ -311,7 +313,8 @@ router.post('/events',function(req,res){
              "Description" : result
 
 
-             })
+             }),
+             timeout: 4000 // 4 second second timeout
 
 
          };
@@ -320,7 +323,7 @@ router.post('/events',function(req,res){
             request(option2, function(error, response,body){
 
 
-              if (response.statusCode == 204){ res.send("Sucess")}
+              if (!error && response.statusCode == 204){ res.send("Sucess")}
               else{res.status(400).send({"isError":"true"})}
             })
          }

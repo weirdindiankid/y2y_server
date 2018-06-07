@@ -53,7 +53,8 @@ router.post('/edituser',function(req,res){
                        "Comments_on_Daily_Rating__c":comment,
                        "Daily_Guest_Rating__c":rating
 
-              })
+              }),
+              timeout: 4000 // 4 second second timeout
 
             };
 
@@ -61,7 +62,7 @@ router.post('/edituser',function(req,res){
 
 
 
-                    if (response.statusCode == 201){  //201 means created
+                    if (!error && response.statusCode == 201){  //201 means created
                       //no error
                       res.status(201).send("success")
 
@@ -119,7 +120,8 @@ router.post('/feedback',function(req,res){
                        "Comments_about_Y2Y__c":comment
 
 
-              })
+              }),
+              timeout: 4000 // 4 second second timeout
 
             };
 
@@ -127,7 +129,7 @@ router.post('/feedback',function(req,res){
 
 
 
-                    if (response.statusCode == 201){  //201 means created
+                    if (!error && response.statusCode == 201){  //201 means created
                       //no error
                       res.status(201).send("sucess")
 

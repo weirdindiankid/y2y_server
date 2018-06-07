@@ -55,7 +55,8 @@ router.get('/detailuser/',function(req,res){
               headers: {
                 'Authorization': 'Bearer ' + access_token
 
-              }
+              },
+              timeout: 4000 // 4 second second timeout
            };
 
 
@@ -68,7 +69,8 @@ router.get('/detailuser/',function(req,res){
               headers: {
                 'Authorization': 'Bearer ' + access_token
 
-              }
+              },
+              timeout: 4000 // 4 second second timeout
            };
 
 
@@ -79,7 +81,7 @@ router.get('/detailuser/',function(req,res){
             headers: {
               'Authorization': 'Bearer ' + access_token
 
-            }
+            },timeout: 4000 // 4 second second timeout
 
           };
 

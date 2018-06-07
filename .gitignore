@@ -1,2 +1,3 @@
 node_modules≈
 /auth/auth.js
+.env
