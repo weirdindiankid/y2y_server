@@ -283,6 +283,9 @@ router.post('/events',function(req,res){
         var desc = RemoveUser(description,userobject)
         callback(null,desc);
       }
+      else{
+        res.status(400).send({"isError":"true"})
+      }
 
 
    }
@@ -293,7 +296,7 @@ router.post('/events',function(req,res){
     }],function(err,result){
          // callback after all the calls are done
 
-         console.log(result)
+
 
          const option2 = {
            method: 'PATCH',

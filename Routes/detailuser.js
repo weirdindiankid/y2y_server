@@ -74,7 +74,7 @@ router.get('/detailuser/',function(req,res){
 
           const option3 = {
 
-            method: 'GETs',
+            method: 'GET',
             uri: instance_url+"/services/data/v20.0/query/?q=SELECT+id+,+Type__c+,+Guest__c+,+Suspension_Start_Date__c+,+Suspension_End_Date__c+,+Description__c+,+CreatedDate+,+Delivery_Status__c+from+Consequence__c+WHERE+Guest__c='"+id+"'+AND+Delivery_Status__c='Active'+AND+(Type__c='Minor Warning'+OR+Type__c='Major Warning'+OR+Type__c='Suspension')",
             headers: {
               'Authorization': 'Bearer ' + access_token
