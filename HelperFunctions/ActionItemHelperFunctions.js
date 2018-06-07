@@ -17,7 +17,7 @@ module.exports = {
         var id = tokens[0];
 
         const option = {
-            method: 'GET',
+            method: 'GETs',
             uri: instance_url+"/services/data/v20.0/query/?q=SELECT+Name+,+Guest__c+,+Number_of_Steps__c+,+id+,+Status__c+from+Action_Item__c+WHERE+Guest__c='"+id+"'+AND+Status__c='Planned'",
             headers: {
               'Authorization': 'Bearer ' + access_token
