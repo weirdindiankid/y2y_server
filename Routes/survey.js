@@ -43,7 +43,7 @@ router.post('/edituser',function(req,res){
             body:JSON.stringify({
 
                       "Name"       : "Android_app_survey",
-                      "CM_First_Name_and_Last_Initial__c"  : "RM",
+                      "CM_First_Name_and_Last_Initial__c"  : "ANDROID App",
                       "RecordType" :{
 
                       	"Name": "Guest App"

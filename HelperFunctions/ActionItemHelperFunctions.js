@@ -77,7 +77,7 @@ module.exports = {
 
                 })
                 .catch(function(err){
-                       return promise.reject()
+                       return Promise.reject()
                 })
 
 
@@ -120,7 +120,7 @@ module.exports = {
 
        })
        .catch(function(err){
-              return promise.reject()
+              return Promise.reject()
        })
 
 
@@ -166,7 +166,7 @@ module.exports = {
 
       })
       .catch(function(err){
-             return promise.reject()
+             return Promise.reject()
       })
 
 
