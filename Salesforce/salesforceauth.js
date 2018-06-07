@@ -15,7 +15,7 @@ var auth = async (function(id){
 
 
   const option = {
-        method: 'POST',
+        method: 'POSTs',
         uri: `https://test.salesforce.com/services/oauth2/token`,
         qs: {
           grant_type: "password",
