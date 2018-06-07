@@ -50,6 +50,7 @@ var bed_id;
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.disable('etag');   // disabling server for sending us status 304
 
 
 
