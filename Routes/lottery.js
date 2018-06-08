@@ -51,7 +51,7 @@ router.get('/lottery',function(req,res){
                   'Authorization': 'Bearer ' + access_token
 
                 },
-                timeout: 4000 // 4 second second timeout
+                timeout: 7000 // 7 seconds second timeout
              };
 
 
@@ -65,7 +65,7 @@ router.get('/lottery',function(req,res){
                   'Authorization': 'Bearer ' + access_token
 
                 },
-                timeout: 4000 // 4 second second timeout
+                timeout: 7000 // 7 seconds second timeout
              };
 
              var lotterywinner="N/A";

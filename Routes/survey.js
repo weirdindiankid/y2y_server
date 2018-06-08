@@ -54,7 +54,7 @@ router.post('/edituser',function(req,res){
                        "Daily_Guest_Rating__c":rating
 
               }),
-              timeout: 4000 // 4 second second timeout
+              timeout: 7000 // 7 seconds second timeout
 
             };
 
@@ -121,7 +121,7 @@ router.post('/feedback',function(req,res){
 
 
               }),
-              timeout: 4000 // 4 second second timeout
+              timeout: 7000 // 7 seconds second timeout
 
             };
 

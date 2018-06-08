@@ -44,7 +44,7 @@ router.get('/events',function(req,res,next){
          'Authorization': 'Bearer ' + access_token
 
        },
-       timeout: 4000 // 4 second second timeout
+       timeout: 7000 // 7 seconds second timeout
 
      }; // option close
 
@@ -223,7 +223,7 @@ router.post('/events',function(req,res){
          'Authorization': 'Bearer ' + access_token
 
        },
-       timeout: 4000 // 4 second second timeout
+       timeout: 7000 // 7 seconds second timeout
 
      };
 
@@ -314,7 +314,7 @@ router.post('/events',function(req,res){
 
 
              }),
-             timeout: 4000 // 4 second second timeout
+             timeout: 7000 // 7 seconds second timeout
 
 
          };
