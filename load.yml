@@ -1,0 +1,26 @@
+config:
+  target: 'https://y2y.herokuapp.com'
+  phases:
+    - duration: 20
+      arrivalRate: 40
+
+scenarios:
+  - flow:
+    - post:
+          url: "/login"
+          headers:
+              Content-Type : "application/json"
+
+          body:  '{"username":"adam", "password": "password"}'
+          capture:
+              json: "$.token"
+              as: "token"
+
+    - get:
+          url : "/detailuser"
+          headers :
+            authorization :  bearer {{ token }}
+
+          capture:
+            json: "$.Major_warning"
+            as : "warning"
