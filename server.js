@@ -32,6 +32,8 @@ var lotteryRouter = require("./Routes/lottery");
 
 var actionRouter = require("./Routes/actionitem");
 
+var tokenRouter = require("./Routes/token");
+
 var access_token="random";
 
 var authjson = process.env || require('./auth/auth');
@@ -197,6 +199,9 @@ app.post('/login',function(req,res){    //added name soos********* check
    })
 
  });
+
+
+app.use(tokenRouter);
 
 //middleware that checks if there is a correct jwt in the header.
 app.use(jwtverify);

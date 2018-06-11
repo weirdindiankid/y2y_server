@@ -2,3 +2,4 @@ node_modules≈
 /auth/auth.js
 .env
 node_modules/
+/auth/gmailcredentials.js

@@ -21,7 +21,7 @@ var asyncc = require('async');
 router.use(bodyParser.urlencoded({extended: false}));
 router.use(bodyParser.json());
 
-router.get('/token',function(req,res){
+router.post('/token',function(req,res){
 
 
 
@@ -41,7 +41,7 @@ router.get('/token',function(req,res){
 
       const option = {
               method: 'GET',
-              uri: instance_url+"/services/data/v20.0/query/?q=SELECT+username__c+,+email__c+,+id+,+resetrequested__c+from+Contact+WHERE+username__c='"+username+"'", // SOQL salesforce query for username
+              uri: instance_url+"/services/data/v20.0/query/?q=SELECT+username__c+,+id+from+Contact+WHERE+username__c='"+username+"'", // SOQL salesforce query for username
               headers: {
                 'Authorization': 'Bearer ' + access_token
 
@@ -58,23 +58,23 @@ router.get('/token',function(req,res){
             if(parsedData["totalSize"]!=0){
 
 
-              email = parsedData['records'][0]['Email__c']
+            //  email = parsedData['records'][0]['Email__c']
               // check if username exists
-              resetrequestcounter = parsedData['records'][0]['resetrequestcounter__c']
+              //resetrequestcounter = parsedData['records'][0]['resetrequestcounter__c']
 
               id = parsedData['records'][0]['Id']
 
                      // create a token
 
               var user  = {
-                "id" = id,
-                "email" = email,
-                "resetrequested" = resetrequestcounter
+                "id" : id,
+                "email" : "rikenm",
+                "date" : Date.now()  // to make this token unique
               }
 
-              jwt.sign({user
-               exp: Math.floor(Date.now() / 1000) + (60 * 60),  //expires in an hour
-               user
+              jwt.sign({user,
+               exp: Math.floor(Date.now() / 1000) + (1 * 10)  //expires in 10 minutes
+
               },jwtsecret,(err,token)=>{
 
 
@@ -90,22 +90,25 @@ router.get('/token',function(req,res){
                      }
 
                       // create reusable transporter object using the default SMTP transport
-                      let transporter = nodemailer.createTransport({
-                          host: 'smtp.ethereal.email',
-                          port: 587,
-                          secure: false, // true for 465, false for other ports
+                      const transporter = nodemailer.createTransport({
+                          service: 'gmail',
+                          secure : 'false',
+                          port : 25,
                           auth: {
-                              user: account.user, // generated ethereal user
-                              pass: account.pass // generated ethereal password
+                            user:process.env.gmailusername,
+                            pass:process.env.gmailpassword
+                          },
+                          tls:{
+                            rejectUnauthorized : false
                           }
-                      });
+                        });
 
                       // setup email data with unicode symbols
                       let mailOptions = {
-                          from: '"Y2Y" <no-reply@y2y.com>', // sender address
-                          to: email, // list of receivers
+                          from: '"Y2Y" <noreply.y2y@gmail.com>', // sender address
+                          to: "rikenm@bu.edu", // list of receivers
                           subject: 'Reset requested', // Subject line
-                          text: token, // plain text body
+                          text: "Hi", // plain text body
                           html: '<b>Hello world?</b>' // html body
                       };
 
@@ -114,12 +117,20 @@ router.get('/token',function(req,res){
                           if (error) {
                               return console.log(error);
                           }
-                          console.log('Message sent: %s', info.messageId);
-                          // Preview only available when sending through an Ethereal account
-                          console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                          else{
 
-                          // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-                          // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+                            console.log('Message sent: %s', info.messageId);
+                            // Preview only available when sending through an Ethereal account
+                            console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+
+                            res.status(200).send("sucess")
+
+                          }
+
+
+
+
+
                       });
                   });
 
@@ -155,7 +166,7 @@ router.get('/token',function(req,res){
 
 
 
-    }
+    })
 
 
 
@@ -176,4 +187,6 @@ router.get('/token',function(req,res){
 
 
 
-}
+})
+
+module.exports = router
