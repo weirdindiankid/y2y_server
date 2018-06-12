@@ -8,6 +8,8 @@ var Salesforceauth = require("../Salesforce/salesforceauth");
 const request = require('request');
 const jwt = require('jsonwebtoken')
 var jwtsecret = process.env.jwtsecret || authjson.jwtsecret ;
+var tokenHelperFunctions =  require("../HelperFunctions/TokenHelper");
+var counteradd = tokenHelperFunctions["helperOne"];
 
 const nodemailer = require('nodemailer');
 
@@ -41,7 +43,7 @@ router.post('/token',function(req,res){
 
       const option = {
               method: 'GET',
-              uri: instance_url+"/services/data/v20.0/query/?q=SELECT+username__c+,+id+from+Contact+WHERE+username__c='"+username+"'", // SOQL salesforce query for username
+              uri: instance_url+"/services/data/v20.0/query/?q=SELECT+username__c+,+id+,+PasswordResetRequestedCounter__c+from+Contact+WHERE+username__c='"+username+"'", // SOQL salesforce query for username
               headers: {
                 'Authorization': 'Bearer ' + access_token
 
@@ -58,9 +60,13 @@ router.post('/token',function(req,res){
             if(parsedData["totalSize"]!=0){
 
 
-            //  email = parsedData['records'][0]['Email__c']
+              email = parsedData['records'][0]['Email__c']
               // check if username exists
-              //resetrequestcounter = parsedData['records'][0]['resetrequestcounter__c']
+
+            if(parsedData['records'][0]['PasswordResetRequestedCounter__c'] === null) {resetrequestcounter = 0}
+            else{  resetrequestcounter = parsedData['records'][0]['PasswordResetRequestedCounter__c']}
+
+
 
               id = parsedData['records'][0]['Id']
 
@@ -75,7 +81,7 @@ router.post('/token',function(req,res){
               jwt.sign({user,
                exp: Math.floor(Date.now() / 1000) + (1 * 10)  //expires in 10 minutes
 
-              },jwtsecret,(err,token)=>{
+             },jwtsecret+resetrequestcounter,(err,token)=>{
 
 
                   // send the mail
@@ -115,6 +121,8 @@ router.post('/token',function(req,res){
                       // send mail with defined transport object
                       transporter.sendMail(mailOptions, (error, info) => {
                           if (error) {
+
+                              res.status(500).send("fail to send the email")
                               return console.log(error);
                           }
                           else{
@@ -123,7 +131,19 @@ router.post('/token',function(req,res){
                             // Preview only available when sending through an Ethereal account
                             console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 
-                            res.status(200).send("sucess")
+                            //increase the counter
+
+                            counteradd().then(function(){
+
+
+                                  res.status(200).send("success")
+
+
+                            })
+
+
+
+
 
                           }
 
