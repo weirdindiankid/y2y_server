@@ -60,7 +60,7 @@ router.post('/token',function(req,res){
             if(parsedData["totalSize"]!=0){
 
 
-              email = parsedData['records'][0]['Email__c']
+              email = parsedData['records'][0]['Email__c']  // change this
               // check if username exists
 
             if(parsedData['records'][0]['PasswordResetRequestedCounter__c'] === null) {resetrequestcounter = 0}

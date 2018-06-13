@@ -183,7 +183,7 @@ app.post('/login',function(req,res){    //added name soos********* check
              //salesforce responsed with an error
 
 
-                res.status(500).send("error")
+                res.status(500).send(error)
 
             }
 
@@ -195,7 +195,7 @@ app.post('/login',function(req,res){    //added name soos********* check
    }) // error propagate from salesforce auth
    .catch(function(error){
 
-     res.status(500).send("error");
+     res.status(500).send(error);
    })
 
  });
