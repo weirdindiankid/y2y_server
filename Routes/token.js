@@ -134,6 +134,7 @@ router.post('/token',function(req,res){
                             //increase the counter
 
                             token[0] = id
+                            token.push(resetrequestcounter)
 
                             counteradd(token).then(function(){
 
