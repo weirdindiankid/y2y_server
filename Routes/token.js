@@ -143,10 +143,13 @@ router.post('/token',function(req,res){
 
 
                             })
-                            .catch(err){
+                            .catch(function(error){
 
-                              res.status(400).send("error")
-                            }
+                               console.log("inside error")
+                               console.log(error)
+
+                               res.status(400).send("error");
+                            });
 
 
 
