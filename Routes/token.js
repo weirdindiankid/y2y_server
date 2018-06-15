@@ -112,9 +112,9 @@ router.post('/token',function(req,res){
                       // setup email data with unicode symbols
                       let mailOptions = {
                           from: '"Y2Y" <noreply.y2y@gmail.com>', // sender address
-                          to: "rikenm@bu.edu", // list of receivers
+                          to: "m.biken@ymail.com", // list of receivers
                           subject: 'Reset requested', // Subject line
-                          text: "Hi", // plain text body
+                          text: "Hi, this is a test", // plain text body
                           html: '<b>Hello world?</b>' // html body
                       };
 
@@ -133,7 +133,9 @@ router.post('/token',function(req,res){
 
                             //increase the counter
 
-                            counteradd().then(function(){
+                            token[0] = id
+
+                            counteradd(token).then(function(){
 
 
                                   res.status(200).send("success")
