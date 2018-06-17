@@ -32,8 +32,19 @@ router.get('/signup',function(req,res){
 
         //check if token has expired and isValid
         // if valid hash the password and save it
+        var isExpiredToken = false;
 
-        
+        var dateNow = new Date();
+
+        if(decodedToken.exp < dateNow.getTime())
+
+        {
+               isExpiredToken = true;
+        }
+
+
+
+
 
 
 

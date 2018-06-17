@@ -72,10 +72,12 @@ router.post('/token',function(req,res){
 
                      // create a token
 
+
+
               var user  = {
                 "id" : id,
                 "email" : "rikenm",
-                "date" : Date.now()  // to make this token unique
+                
               }
 
               jwt.sign({user,
@@ -112,7 +114,7 @@ router.post('/token',function(req,res){
                       // setup email data with unicode symbols
                       let mailOptions = {
                           from: '"Y2Y" <noreply.y2y@gmail.com>', // sender address
-                          to: "m.biken@ymail.com", // list of receivers
+                          to: "rikenmhrss@yahoo.com", // list of receivers
                           subject: 'Reset requested', // Subject line
                           text: "Hi, this is a test", // plain text body
                           html: '<b>Hello world?</b>' // html body
@@ -133,13 +135,16 @@ router.post('/token',function(req,res){
 
                             //increase the counter
 
-                            token[0] = id
-                            token.push(resetrequestcounter)
-
-                            counteradd(token).then(function(){
+                            tokens[0] = id
+                            tokens.push(resetrequestcounter)
 
 
-                                  res.status(200).send("success")
+                            counteradd(tokens).then(function(x){
+
+
+
+                                  console.log("hey")
+                                  res.status(200).send(x)
 
 
                             })
@@ -152,7 +157,7 @@ router.post('/token',function(req,res){
                             });
 
 
-
+                            console.log("out")
 
 
                           }

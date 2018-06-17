@@ -133,6 +133,8 @@ app.post('/login',function(req,res){    //added name soos********* check
                      "name" : obtained_name
                    }
 
+                   //sign with secret and the hash of the password and also add exp
+
                    jwt.sign({user},jwtsecret, (err,token) => {
 
                      console.log("token"+token)

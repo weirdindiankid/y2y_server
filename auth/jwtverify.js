@@ -18,7 +18,8 @@ if(typeof(bearerHeader) != 'undefined' && bearerHeader){
   const bearer = bearerHeader.split(' ');
   const token = bearer[1]
 
-
+  // get password hash of the user
+  
 
   jwt.verify(token,jwtsecret,(err,data)=>{
 

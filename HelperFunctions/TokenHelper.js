@@ -14,11 +14,16 @@ module.exports = {
     counter = tokens[3]+1;
 
 
+    console.log(counter)
+    console.log(tokens)
+
+
     const option = {
       method: 'PATCH',
-      uri: instance_url+"/services/data/v20.0/sobjects/"+id,
+      uri: instance_url+"/services/data/v20.0/sobjects/Contact/"+id,
       headers: {
-        'Authorization': 'Bearer ' + access_token
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json'
 
       },
       body:JSON.stringify({
