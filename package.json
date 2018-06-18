@@ -12,6 +12,7 @@
     "async": "^2.6.0",
     "async-waterfall": "^0.1.5",
     "asyncawait": "^1.0.6",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.2",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",

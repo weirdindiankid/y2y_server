@@ -77,13 +77,13 @@ router.post('/token',function(req,res){
               var user  = {
                 "id" : id,
                 "email" : "rikenm",
-                
+
               }
 
               jwt.sign({user,
-               exp: Math.floor(Date.now() / 1000) + (1 * 10)  //expires in 10 minutes
+               exp: Math.floor(Date.now() / 1000) + (2*60 * 60)  //expires in 120 minutes
 
-             },jwtsecret+resetrequestcounter,(err,token)=>{
+             },jwtsecret,(err,token)=>{
 
 
                   // send the mail

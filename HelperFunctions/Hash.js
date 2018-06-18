@@ -1,24 +1,51 @@
-
-// using SHA256 hash
-
-var crypto = require('crypto');
-const hash = crypto.createHash('sha256');
-
-var salt = "" // saved in enc file
-
-
-
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
+const request = require('request-promise');
+var access_token;
+var instance_url;
 
 module.exports = {
 
-        "hash" : (plaintext) => {
+  "helperOne" : async(function(tokens){
 
-                  hash.update(digest+salt);
+    id = tokens[0];
+    instance_url = tokens[2];
+    access_token = tokens[1];
+    hash = tokens[3]+1;
 
-                   return hash.digest('hex');   // outpting hash in the  hex format
 
 
-        }
+
+
+    const option = {
+      method: 'PATCH',
+      uri: instance_url+"/services/data/v20.0/sobjects/Contact/"+id,
+      headers: {
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json'
+
+      },
+      body:JSON.stringify({
+
+        "PasswordGuest__c" : hash // see this
+
+
+        }),
+        timeout: 7000 // 7 seconds second timeout
+
+    }
+
+    return request(option)
+    .then(function(body){
+
+      return("sucess")
+
+
+    })
+
+
+  })
+
 
 
 }

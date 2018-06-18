@@ -2,6 +2,7 @@ var app = require('express')();
 require('dotenv').config()
 
 var http =require('http').Server(app);
+var bcrypt = require('bcrypt-nodejs')
 
 
 
