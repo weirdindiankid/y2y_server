@@ -116,7 +116,7 @@ router.post('/token',function(req,res){
                           from: '"Y2Y" <noreply.y2y@gmail.com>', // sender address
                           to: "rikenmhrss@yahoo.com", // list of receivers
                           subject: 'Reset requested', // Subject line
-                          text: "Hi, this is a test", // plain text body
+                          text: "Hi, this is a test and your token is "+token, // plain text body
                           html: '<b>Hello world?</b>' // html body
                       };
 

@@ -111,7 +111,12 @@ app.post('/login',function(req,res){    //added name soos********* check
                 obtained_name = parsedData['records'][0]['Name'];
 
 
+                // compare hashed password and password using bcrypt
 
+                // Load hash from your password DB.
+                // bcrypt.compare(password, hash, function(err, res) {
+                //       // res == true
+                //   });
 
 
                  if (obtained_password == password){
