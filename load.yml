@@ -1,5 +1,5 @@
 config:
-  target: 'https://y2y.herokuapp.com'
+  target: 'https://y2ya.herokuapp.com'
   phases:
     - duration: 20
       arrivalRate: 40
