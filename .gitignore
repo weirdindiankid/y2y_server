@@ -3,3 +3,4 @@ node_modules≈
 .env
 node_modules/
 /auth/gmailcredentials.js
+yarn.lock
